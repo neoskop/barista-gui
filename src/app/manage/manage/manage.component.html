@@ -1,0 +1,27 @@
+<header>
+  <md-toolbar color="primary" class="mat-elevation-z5">
+    <a [routerLink]="[ '/' ]"><md-icon>directions_run</md-icon> Barista</a>
+  </md-toolbar>
+</header>
+<md-sidenav-container fxFlex="1 1 auto">
+  <md-sidenav mode="side" opened="true" fxLayout="column" class="mat-elevation-z2">
+    <md-nav-list>
+      <a md-list-item [routerLink]="[ '/setup' ]">Setup / Administrator</a>
+      <a md-list-item [routerLink]="[ '/manage', 'projects', 'list' ]">Projects / List</a>
+    </md-nav-list>
+    <md-nav-list>
+      <a md-list-item href="#">Logout</a>
+    </md-nav-list>
+  </md-sidenav>
+
+  <div fxFlex="1 1 auto" fxLayout="column">
+    <router-outlet></router-outlet>
+    <footer>
+      <md-toolbar color="primary">
+        <a href="https://neoskop.de">&copy; 2017 Neoskop GmbH</a>
+      </md-toolbar>
+    </footer>
+  </div>
+
+</md-sidenav-container>
+

@@ -1,0 +1,41 @@
+<md-card>
+  <md-card-title>
+    <md-toolbar color="primary">Barista Setup</md-toolbar>
+  </md-card-title>
+  <form [formGroup]="form">
+    <md-card-content>
+      <md-form-field>
+        <input mdInput type="text" placeholder="Administrator Name" formControlName="name" />
+        <md-error *ngIf="form.get('name').touched && form.get('name').invalid">
+          <span *ngIf="form.get('name').hasError('required')">Name is <strong>required</strong></span>
+          <span *ngIf="form.get('name').hasError('minlength')">Name is <strong>to short</strong></span>
+          <span *ngIf="form.get('name').hasError('maxlength')">Name is <strong>to long</strong></span>
+          <span *ngIf="form.get('name').hasError('pattern')">Name has <strong>invalid characters</strong> (a-z0-9-_.)</span>
+        </md-error>
+      </md-form-field>
+      <md-form-field>
+        <input mdInput type="email" placeholder="Administrator E-Mail" formControlName="email" />
+        <md-error *ngIf="form.get('email').touched && form.get('email').invalid">
+          <span *ngIf="form.get('email').hasError('required')">E-Mail is <strong>required</strong></span>
+          <span *ngIf="form.get('email').hasError('email')">Invalid E-Mail address</span>
+        </md-error>
+      </md-form-field>
+      <md-form-field>
+        <input mdInput type="password" placeholder="Password" formControlName="password" />
+        <md-error *ngIf="form.get('password').touched && form.get('password').invalid">
+          <span *ngIf="form.get('password').hasError('required')">Password is <strong>required</strong></span>
+        </md-error>
+      </md-form-field>
+      <md-form-field>
+        <input mdInput type="password" placeholder="Repeat Password" formControlName="repeat" />
+        <md-error *ngIf="form.get('repeat').touched && form.get('repeat').invalid">
+          <span *ngIf="form.get('repeat').hasError('required')">Password is <strong>required</strong></span>
+          <span *ngIf="form.get('repeat').hasError('repeat')">Invalid repetition</span>
+        </md-error>
+      </md-form-field>
+    </md-card-content>
+    <md-card-actions>
+      <button md-raised-button color="primary" [disabled]="form.invalid">Save</button>
+    </md-card-actions>
+  </form>
+</md-card>

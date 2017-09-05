@@ -3,8 +3,21 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: 'setup',
+    loadChildren: './setup/setup.module#SetupModule'
+  },
+  {
+    path: 'manage',
+    loadChildren: './manage/manage.module#ManageModule'
+  },
+  {
     path: '',
-    children: []
+    pathMatch: 'full',
+    redirectTo: 'manage'
+  },
+  {
+    path: '**',
+    redirectTo: 'manage'
   }
 ];
 
