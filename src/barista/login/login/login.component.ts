@@ -23,9 +23,13 @@ export class LoginComponent implements OnInit {
   }
   
   submit() {
-    this.error = null;
-    this.dispatcher.dispatch(new LoginAction(this.form.value.username, this.form.value.password)).subscribe(null, error => {
-      this.error = error;
-    });
+    if(this.form.valid && this.form.enabled) {
+      this.error = null;
+      this.form.disable();
+      this.dispatcher.dispatch(new LoginAction(this.form.value.username, this.form.value.password)).subscribe(null, error => {
+        this.form.enable();
+        this.error = error;
+      });
+    }
   }
 }

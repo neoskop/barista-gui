@@ -13,7 +13,7 @@
       </md-form-field>
     </md-card-content>
     <md-card-actions>
-      <button md-raised-button color="primary" [disabled]="form.invalid">Login</button>
+      <button md-raised-button color="primary" [disabled]="form.invalid || form.disabled">Login</button>
     </md-card-actions>
   </form>
 </md-card>

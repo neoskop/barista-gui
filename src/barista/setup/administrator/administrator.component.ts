@@ -47,8 +47,11 @@ export class AdministratorComponent implements OnInit {
   }
   
   async submit() {
-    const { name, email, password } = this.form.value;
-    this.dispatcher.dispatch(new SetupAdministratorAction(name, email, password));
+    if(this.form.valid && this.form.enabled) {
+      const { name, email, password } = this.form.value;
+      this.form.disable();
+      this.dispatcher.dispatch(new SetupAdministratorAction(name, email, password));
+    }
   }
 
 }

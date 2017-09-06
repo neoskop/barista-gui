@@ -35,7 +35,7 @@
       </md-form-field>
     </md-card-content>
     <md-card-actions>
-      <button md-raised-button color="primary" [disabled]="form.invalid">Save</button>
+      <button md-raised-button color="primary" [disabled]="form.invalid || form.disabled">Save</button>
     </md-card-actions>
   </form>
 </md-card>
