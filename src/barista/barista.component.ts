@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
 
 @Component({
   selector: 'barista-root',
@@ -6,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./barista.component.sass']
 })
 export class BaristaComponent {
-  title = 'app';
+  
+  constructor(protected loadingInterceptor : LoadingInterceptor) {
+  
+  }
 }

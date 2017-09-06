@@ -12,6 +12,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthInterceptor } from './http-interceptors/auth.interceptor';
 import { AuthGuard } from './login/auth.guard';
+import { MdProgressBarModule } from '@angular/material';
+import { LoadingInterceptor } from "./http-interceptors/loading.interceptor";
 
 @NgModule({
   declarations: [
@@ -22,14 +24,17 @@ import { AuthGuard } from './login/auth.guard';
     CommonModule,
     BaristaRoutingModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    MdProgressBarModule
   ],
   providers: [
     DispatcherService,
     ApiService,
     SetupCheckGuard,
     AuthGuard,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    LoadingInterceptor,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useExisting: LoadingInterceptor, multi: true }
   ],
   bootstrap: [BaristaComponent]
 })
