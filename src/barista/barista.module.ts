@@ -6,6 +6,12 @@ import { NgModule } from '@angular/core';
 import { BaristaRoutingModule } from './barista-routing.module';
 import { BaristaComponent } from './barista.component';
 import { DispatcherService } from "./services/dispatcher.service";
+import { ApiService } from './services/api.service';
+import { SetupCheckGuard } from './login/setup-check.guard';
+import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { AuthInterceptor } from './http-interceptors/auth.interceptor';
+import { AuthGuard } from './login/auth.guard';
 
 @NgModule({
   declarations: [
@@ -15,11 +21,18 @@ import { DispatcherService } from "./services/dispatcher.service";
     BrowserModule,
     CommonModule,
     BaristaRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule
   ],
   providers: [
-    DispatcherService
+    DispatcherService,
+    ApiService,
+    SetupCheckGuard,
+    AuthGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [BaristaComponent]
 })
-export class BaristaModule { }
+export class BaristaModule {
+  constructor(protected api : ApiService) {}
+}

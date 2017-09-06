@@ -1,18 +1,23 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { SetupCheckGuard } from './login/setup-check.guard';
+import { AuthGuard } from './login/auth.guard';
 
 const routes: Routes = [
   {
     path: 'setup',
-    loadChildren: './setup/setup.module#SetupModule'
+    loadChildren: './setup/setup.module#SetupModule',
+    canActivate: [ SetupCheckGuard ]
   },
   {
     path: 'manage',
-    loadChildren: './manage/manage.module#ManageModule'
+    loadChildren: './manage/manage.module#ManageModule',
+    canActivate: [ SetupCheckGuard, AuthGuard ]
   },
   {
     path: 'login',
-    loadChildren: './login/login.module#LoginModule'
+    loadChildren: './login/login.module#LoginModule',
+    canActivate: [ SetupCheckGuard, AuthGuard ]
   },
   {
     path: '',

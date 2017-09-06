@@ -18,7 +18,9 @@ export class DispatcherService extends Subject<any> {
   
   dispatch<T>(action : Action<T>) : Action<T>
   dispatch<T>(value : T) : T {
-    this.next(value);
+    setTimeout(() => {
+      this.next(value);
+    });
     return value;
   }
   

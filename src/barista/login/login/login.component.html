@@ -2,8 +2,9 @@
   <md-card-title>
     <md-toolbar color="primary">Barista - Login</md-toolbar>
   </md-card-title>
-  <form [formGroup]="form">
+  <form [formGroup]="form" (submit)="submit()">
     <md-card-content>
+      <p class="warn" *ngIf="error">{{ error }}</p>
       <md-form-field>
         <input mdInput type="text" placeholder="Username" formControlName="username" />
       </md-form-field>
