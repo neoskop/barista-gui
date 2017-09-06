@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
-import { Action, DispatcherService } from '../services/dispatcher.service';
+import { DispatcherService } from '../services/dispatcher.service';
 import { Observable } from 'rxjs/Observable';
+import { SetupCheckAction } from "./setup.actions";
 
 @Injectable()
 export class SetupCheckGuard implements CanActivate {
@@ -18,8 +19,4 @@ export class SetupCheckGuard implements CanActivate {
   }
 }
 
-export class SetupCheckAction extends Action<boolean> {
-  constructor(public isSetup : boolean) {
-    super();
-  }
-}
+

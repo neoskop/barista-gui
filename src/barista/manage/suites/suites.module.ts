@@ -10,9 +10,10 @@ import {
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormComponent } from './form/form.component';
-import { CreateComponent, CreateSuiteDialogAction } from './create/create.component';
+import { CreateComponent } from './create/create.component';
 import { DispatcherService } from "../../services/dispatcher.service";
-import { UpdateComponent, UpdateSuiteDialogAction } from './update/update.component';
+import { UpdateComponent } from './update/update.component';
+import { CreateSuiteDialogAction, UpdateSuiteDialogAction } from "./suites.actions";
 
 @NgModule({
   imports: [

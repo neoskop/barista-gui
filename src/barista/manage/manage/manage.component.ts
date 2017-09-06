@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DispatcherService } from '../../services/dispatcher.service';
+import { LogoutAction } from "../../login/login.actions";
 
 @Component({
   selector: 'barista-manage',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageComponent implements OnInit {
 
-  constructor() { }
+  constructor(protected dispatcher : DispatcherService) { }
 
   ngOnInit() {
+  }
+  
+  logout() {
+    this.dispatcher.dispatch(new LogoutAction());
   }
 
 }

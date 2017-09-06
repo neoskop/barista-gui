@@ -29,11 +29,3 @@ export class UpdateComponent implements OnInit {
     this.dialogRef.close();
   }
 }
-
-export class UpdateSuiteDialogAction extends Action<void|any> {
-  readonly component = UpdateComponent;
-  
-  constructor(public suite : any) {
-    super();
-  }
-}

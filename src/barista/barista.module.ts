@@ -7,7 +7,7 @@ import { BaristaRoutingModule } from './barista-routing.module';
 import { BaristaComponent } from './barista.component';
 import { DispatcherService } from "./services/dispatcher.service";
 import { ApiService } from './services/api.service';
-import { SetupCheckGuard } from './login/setup-check.guard';
+import { SetupCheckGuard } from './setup/setup-check.guard';
 import { HttpClientModule } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthInterceptor } from './http-interceptors/auth.interceptor';

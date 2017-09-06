@@ -11,8 +11,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { Subject } from 'rxjs/Subject';
 import { DispatcherService } from "../../../services/dispatcher.service";
-import { CreateProjectDialogAction } from "../create/create.component";
-import { UpdateProjectDialogAction } from '../update/update.component';
+import { CreateProjectDialogAction, UpdateProjectDialogAction } from '../projects.actions';
 
 @Component({
   selector: 'barista-list',

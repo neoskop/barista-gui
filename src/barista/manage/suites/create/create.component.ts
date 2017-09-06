@@ -27,6 +27,3 @@ export class CreateComponent implements OnInit {
   }
 }
 
-export class CreateSuiteDialogAction extends Action<void|any> {
-  readonly component = CreateComponent;
-}

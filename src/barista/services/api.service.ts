@@ -3,21 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/repeat';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import { DispatcherService, Action } from './dispatcher.service';
-import { SetupAdministratorAction } from '../setup/administrator/administrator.component';
+import { DispatcherService } from './dispatcher.service';
 import { Router } from '@angular/router';
-import { SetupCheckAction } from '../login/setup-check.guard';
-import { AuthCheckAction } from "../login/auth.guard";
+import { SetupAdministratorAction, SetupCheckAction } from "../setup/setup.actions";
+import { AuthCheckAction, LoginAction, LogoutAction } from '../login/login.actions';
 
-export class LoginAction extends Action<void> {
-  constructor(public username : string, public password : string) {
-    super();
-  }
-}
-
-export class LogoutAction extends Action<any> {
-
-}
 
 @Injectable()
 export class ApiService {

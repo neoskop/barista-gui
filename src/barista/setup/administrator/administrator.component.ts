@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
-import { Router } from '@angular/router';
-import { Action, DispatcherService } from '../../services/dispatcher.service';
+import { DispatcherService } from '../../services/dispatcher.service';
+import { SetupAdministratorAction } from '../setup.actions';
 
 @Component({
   selector: 'barista-administrator',
@@ -52,10 +51,4 @@ export class AdministratorComponent implements OnInit {
     this.dispatcher.dispatch(new SetupAdministratorAction(name, email, password));
   }
 
-}
-
-export class SetupAdministratorAction extends Action<void> {
-  constructor(public username : string, public email : string, public password : string) {
-    super()
-  }
 }

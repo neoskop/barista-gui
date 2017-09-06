@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DispatcherService } from '../../services/dispatcher.service';
-import { LoginAction } from '../../services/api.service';
+import { LoginAction } from "../login.actions";
 
 @Component({
   selector: 'barista-login',

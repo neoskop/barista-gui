@@ -12,10 +12,11 @@ import {
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FormComponent } from './form/form.component';
-import { CreateComponent, CreateProjectDialogAction } from './create/create.component';
+import { CreateComponent } from './create/create.component';
 import { DispatcherService } from "../../services/dispatcher.service";
 import { RadioTabsDirective, RadioTabValueDirective } from "../../directives/radio-tabs.directive";
-import { UpdateComponent, UpdateProjectDialogAction } from './update/update.component';
+import { UpdateComponent } from './update/update.component';
+import { CreateProjectDialogAction, UpdateProjectDialogAction } from './projects.actions';
 
 @NgModule({
   imports: [

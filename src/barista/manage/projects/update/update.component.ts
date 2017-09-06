@@ -30,10 +30,3 @@ export class UpdateComponent implements OnInit {
 }
 
 
-export class UpdateProjectDialogAction extends Action<void|any> {
-  readonly component = UpdateComponent;
-  
-  constructor(public project : any) {
-    super();
-  }
-}
