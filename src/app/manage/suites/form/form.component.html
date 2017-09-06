@@ -1,0 +1,77 @@
+<div [formGroup]="form" class="mat-typography">
+  <md-form-field>
+    <input mdInput type="text" placeholder="Suite Identifier" formControlName="id" />
+
+    <md-error *ngIf="form.get('id').invalid">
+      <span *ngIf="form.get('id').hasError('required')">Identifier is <strong>required</strong></span>
+      <span *ngIf="form.get('id').hasError('minlength')">Identifier is <strong>to short</strong></span>
+      <span *ngIf="form.get('id').hasError('maxlength')">Identifier is <strong>to long</strong></span>
+      <span *ngIf="form.get('id').hasError('pattern')">Identifier has <strong>invalid characters</strong> (a-z0-9-_.)</span>
+    </md-error>
+  </md-form-field>
+
+  <md-form-field>
+    <input mdInput type="text" placeholder="Project Name" formControlName="name" />
+
+    <md-error *ngIf="form.get('name').invalid">
+      <span *ngIf="form.get('name').hasError('required')">Name is <strong>required</strong></span>
+    </md-error>
+  </md-form-field>
+
+  <md-form-field>
+    <input mdInput
+           [formControl]="globInput"
+           type="text"
+           placeholder="File Grep"
+           [mdChipInputFor]="globList"
+           (keydown.enter)="add('glob', globInput, globInput.value);$event.stopPropagation()" />
+  </md-form-field>
+  <md-chip-list #globList formArrayName="glob">
+    <md-chip *ngFor="let control of form.get('glob').controls; let index = index" (remove)="remove('glob', index)">
+      <input type="hidden" [formControlName]="index" />
+      {{control.value}}
+      <md-icon mdChipRemove>cancel</md-icon>
+    </md-chip>
+  </md-chip-list>
+
+  <md-form-field>
+    <input mdInput
+           [formControl]="browserInput"
+           type="text"
+           placeholder="Browser"
+           [mdAutocomplete]="browserAuto"
+           [mdChipInputFor]="browsersList"
+           (keydown.enter)="addBrowserConditional(browserInput.value);$event.stopPropagation()" />
+  </md-form-field>
+
+  <md-chip-list #browsersList formArrayName="browsers">
+    <md-chip *ngFor="let control of form.get('browsers').controls; let index = index" (remove)="remove('browser', index)">
+      <input type="hidden" [formControlName]="index" />
+      {{control.value}}
+      <md-icon mdChipRemove>cancel</md-icon>
+    </md-chip>
+  </md-chip-list>
+
+  <md-autocomplete #browserAuto="mdAutocomplete" (optionSelected)="add('browsers', browserInput, $event.option.value)">
+    <md-option *ngFor="let browser of filteredBrowsers | async" [value]="browser">{{ browser }}</md-option>
+  </md-autocomplete>
+
+  <h3>Options</h3>
+
+  <div formGroupName="options">
+    <label>Skip Javascript Errors</label>
+    <md-slide-toggle mdInput formControlName="skipJsErrors">Enable</md-slide-toggle>
+
+    <label>Quarantine Mode</label>
+    <md-slide-toggle formControlName="quarantineMode">Enable</md-slide-toggle>
+
+    <label>Selector Timeout (<strong>{{form.value.options.selectorTimeout}}</strong>ms)</label>
+    <md-slider formControlName="selectorTimeout" thumbLabel min="0" max="30000" step="500" tickInterval="5"></md-slider>
+
+    <label>Assertion Timeout (<strong>{{form.value.options.assertionTimeout}}</strong>ms)</label>
+    <md-slider formControlName="assertionTimeout" thumbLabel min="0" max="5000" step="500" tickInterval="2"></md-slider>
+
+    <label>Speed (<strong>{{form.value.options.speed}}</strong>)</label>
+    <md-slider formControlName="speed" thumbLabel min="0.1" max="1" step="0.05" tickInterval="1"></md-slider>
+  </div>
+</div>

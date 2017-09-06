@@ -1,0 +1,32 @@
+\:host
+  display: block
+  overflow-y: auto
+
+  md-form-field
+    width: 100%
+
+    textarea
+      height: 100px
+
+
+  md-error > span
+    + span
+      display: none
+
+  md-chip-list.mat-chip-list md-chip.mat-chip
+    margin: 0 8px 8px 0
+
+    &:last-of-type
+      margin: 0
+
+  md-slider
+    width: 100%
+
+    /deep/ .mat-slider-thumb-label
+      width: 36px
+      height: 36px
+      top: -48px
+
+  label
+    display: block
+    margin: 8px 0 12px

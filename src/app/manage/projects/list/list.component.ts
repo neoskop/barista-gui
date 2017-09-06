@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/observable/merge';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { MdSort, MdPaginator, MdTable, MdDialog } from '@angular/material';
+import { MdPaginator, MdSort } from '@angular/material';
 import 'rxjs/add/operator/map';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
@@ -37,13 +37,13 @@ export class ListComponent implements OnInit {
 
   openCreateDialog() {
     this.dispatcher.dispatch(new CreateProjectDialogAction()).subscribe((result) => {
-      console.log('closed', result);
+      console.log('project create', result);
     })
   }
   
-  openEditDialog(row : any) {
+  openUpdateDialog(row : any) {
     this.dispatcher.dispatch(new UpdateProjectDialogAction(row)).subscribe((result) => {
-      console.log('closed', result);
+      console.log('project update', result);
     })
   }
 }

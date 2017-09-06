@@ -1,5 +1,5 @@
 <md-toolbar color="secondary">
-  <span fxFlex="1 0 auto">Projects</span>
+  <span fxFlex="1 0 auto">Suites</span>
   <button md-fab (click)="openCreateDialog()"><md-icon>add</md-icon></button>
 </md-toolbar>
 
@@ -11,22 +11,12 @@
     <md-table #table [dataSource]="dataSource" mdSort>
       <ng-container mdColumnDef="id">
         <md-header-cell *mdHeaderCellDef md-sort-header>ID</md-header-cell>
-        <md-cell *mdCellDef="let row">{{ row._id }}</md-cell>
+        <md-cell *mdCellDef="let row">{{ row.id }}</md-cell>
       </ng-container>
 
       <ng-container mdColumnDef="name">
         <md-header-cell *mdHeaderCellDef md-sort-header>Name</md-header-cell>
         <md-cell *mdCellDef="let row">{{ row.name }}</md-cell>
-      </ng-container>
-
-      <ng-container mdColumnDef="url">
-        <md-header-cell *mdHeaderCellDef md-sort-header>Repository URL</md-header-cell>
-        <md-cell *mdCellDef="let row">{{ row.repository.url }}</md-cell>
-      </ng-container>
-
-      <ng-container mdColumnDef="branch">
-        <md-header-cell *mdHeaderCellDef md-sort-header>Repository Branch</md-header-cell>
-        <md-cell *mdCellDef="let row">{{ row.repository.branch }}</md-cell>
       </ng-container>
 
       <ng-container mdColumnDef="actions">
