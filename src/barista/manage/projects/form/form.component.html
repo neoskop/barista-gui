@@ -1,0 +1,85 @@
+<div [formGroup]="form">
+  <md-form-field>
+    <input mdInput type="text" placeholder="Project Identifier" formControlName="_id" />
+
+    <md-error *ngIf="form.get('_id').invalid">
+      <span *ngIf="form.get('_id').hasError('required')">Identifier is <strong>required</strong></span>
+      <span *ngIf="form.get('_id').hasError('minlength')">Identifier is <strong>to short</strong></span>
+      <span *ngIf="form.get('_id').hasError('maxlength')">Identifier is <strong>to long</strong></span>
+      <span *ngIf="form.get('_id').hasError('pattern')">Identifier has <strong>invalid characters</strong> (a-z0-9-_.)</span>
+    </md-error>
+  </md-form-field>
+
+  <md-form-field>
+    <input mdInput type="text" placeholder="Project Name" formControlName="name" />
+
+    <md-error *ngIf="form.get('name').invalid">
+      <span *ngIf="form.get('name').hasError('required')">Name is <strong>required</strong></span>
+    </md-error>
+  </md-form-field>
+
+  <div formGroupName="security">
+    <p>Read</p>
+    <md-radio-group formControlName="read">
+      <md-radio-button value="public">Public</md-radio-button>
+      <md-radio-button value="restricted">Restricted</md-radio-button>
+    </md-radio-group>
+
+    <p>Exec</p>
+    <md-radio-group formControlName="exec">
+      <md-radio-button value="public">Public</md-radio-button>
+      <md-radio-button value="restricted">Restricted</md-radio-button>
+    </md-radio-group>
+  </div>
+
+  <div formGroupName="repository">
+    <md-tab-group baristaRadioTabs formControlName="type">
+      <md-tab value="git" label="Git">
+        <md-form-field>
+          <input mdInput type="text" placeholder="URL" formControlName="url" />
+
+          <md-error *ngIf="form.get('repository.url').invalid">
+            <span *ngIf="form.get('repository.url').hasError('required')">URL is <strong>required</strong></span>
+          </md-error>
+        </md-form-field>
+        <md-form-field>
+          <input mdInput type="text" placeholder="Branch" formControlName="branch" />
+
+          <md-error *ngIf="form.get('repository.branch').invalid">
+            <span *ngIf="form.get('repository.branch').hasError('required')">Branch is <strong>required</strong></span>
+          </md-error>
+        </md-form-field>
+      </md-tab>
+    </md-tab-group>
+  </div>
+
+  <div formGroupName="auth">
+    <md-tab-group baristaRadioTabs formControlName="type">
+      <md-tab valie="ssh-key" label="SSH Key">
+        <md-form-field>
+          <button md-mini-fab (click)="privateKeyUpload.click()"><md-icon>file_upload</md-icon></button>
+          <input type="file" #privateKeyUpload (change)="sshKeyFromFile('privateKey', privateKeyUpload)">
+          <textarea mdInput type="text" placeholder="Private Key" formControlName="privateKey"></textarea>
+
+          <md-error *ngIf="form.get('auth.privateKey').invalid">
+            <span *ngIf="form.get('auth.privateKey').hasError('required')">Private Key is <strong>required</strong></span>
+          </md-error>
+        </md-form-field>
+        <md-form-field>
+          <button md-mini-fab (click)="publicKeyUpload.click()"><md-icon>file_upload</md-icon></button>
+          <input type="file" #publicKeyUpload (change)="sshKeyFromFile('publicKey', publicKeyUpload)">
+          <textarea mdInput type="text" placeholder="Public Key" formControlName="publicKey"></textarea>
+
+          <md-error *ngIf="form.get('auth.publicKey').invalid">
+            <span *ngIf="form.get('auth.publicKey').hasError('required')">Public Key is <strong>required</strong></span>
+          </md-error>
+        </md-form-field>
+        <md-form-field>
+          <md-icon class="password-visibility-toggle" (click)="displayPassphrase = !displayPassphrase;$event.stopPropagation()">{{ displayPassphrase ? 'visibility_off' : 'visibility' }}</md-icon>
+          <input mdInput [type]="displayPassphrase ? 'text' : 'password'" placeholder="Passphrase" formControlName="passphrase" />
+          <md-hint align="end">Optional</md-hint>
+        </md-form-field>
+      </md-tab>
+    </md-tab-group>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<md-toolbar color="secondary">
+  <span fxFlex="1 0 auto">Suite - Create</span>
+</md-toolbar>
+<form (submit)="submit()">
+  <barista-form #create="form"></barista-form>
+  <div class="footer-buttons">
+    <button md-raised-button button color="primary" [disabled]="create.form.invalid" type="submit">Save</button>
+    <button md-raised-button (click)="cancel()">Cancel</button>
+  </div>
+</form>
