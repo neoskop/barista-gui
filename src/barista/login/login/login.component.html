@@ -1,0 +1,18 @@
+<md-card>
+  <md-card-title>
+    <md-toolbar color="primary">Barista - Login</md-toolbar>
+  </md-card-title>
+  <form [formGroup]="form">
+    <md-card-content>
+      <md-form-field>
+        <input mdInput type="text" placeholder="Username" formControlName="username" />
+      </md-form-field>
+      <md-form-field>
+        <input mdInput type="password" placeholder="Password" formControlName="password" />
+      </md-form-field>
+    </md-card-content>
+    <md-card-actions>
+      <button md-raised-button color="primary" [disabled]="form.invalid">Login</button>
+    </md-card-actions>
+  </form>
+</md-card>

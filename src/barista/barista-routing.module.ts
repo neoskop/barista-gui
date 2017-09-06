@@ -11,6 +11,10 @@ const routes: Routes = [
     loadChildren: './manage/manage.module#ManageModule'
   },
   {
+    path: 'login',
+    loadChildren: './login/login.module#LoginModule'
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'manage'
