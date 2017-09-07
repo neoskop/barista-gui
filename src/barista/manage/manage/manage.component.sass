@@ -5,22 +5,23 @@
   box-sizing: border-box
   flex-direction: column
 
+  .mat-headline
+    margin: 0
+
   > div
     min-height: 100vh
 
-  header > md-toolbar
+  header
     position: relative
     z-index: 10
+    background: #3f51b5
+    color: white
+    font-size: 18px
 
     a
       color: white
-
-      > md-icon
-        font-size: 32px
-        height: 32px
-        width: 32px
-        margin-top: -16px
-        vertical-align: sub
+      padding: 0 16px
+      line-height: 24px
 
   /deep/ md-sidenav-container
     display: flex
@@ -33,7 +34,6 @@
 
     md-sidenav
       min-width: 225px
-      z-index: 1
 
 md-nav-list:not(:last-child)
   flex: 1 0 auto
@@ -42,3 +42,17 @@ footer
   a
     color: white
     font-size: 14px
+
+@media screen and (min-width: 960px)
+  \:host
+    header
+      height: 64px
+      font-size: 24px
+
+      a
+        line-height: 32px
+
+        > md-icon
+          font-size: 32px
+          height: 32px
+          width: 32px

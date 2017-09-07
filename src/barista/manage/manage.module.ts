@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ManageRoutingModule } from './manage-routing.module';
 import { ManageComponent } from './manage/manage.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdListModule, MdSidenavModule, MdToolbarModule, MdIconModule } from '@angular/material';
+import { MdListModule, MdSidenavModule, MdToolbarModule, MdIconModule, MdButtonModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -14,7 +14,8 @@ import { MdListModule, MdSidenavModule, MdToolbarModule, MdIconModule } from '@a
     MdToolbarModule,
     MdSidenavModule,
     MdListModule,
-    MdIconModule
+    MdIconModule,
+    MdButtonModule
   ],
   declarations: [ManageComponent]
 })
