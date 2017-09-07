@@ -16,8 +16,13 @@ import { CreateComponent } from './create/create.component';
 import { DispatcherService } from "../../services/dispatcher.service";
 import { RadioTabsDirective, RadioTabValueDirective } from "../../directives/radio-tabs.directive";
 import { UpdateComponent } from './update/update.component';
-import { CreateProjectDialogAction, RemoveProjectDialogAction, UpdateProjectDialogAction } from './projects.actions';
+import {
+  CreateProjectDialogAction, RemoveProjectDialogAction, UpdateProjectDialogAction, CreateProjectAction, UpdateProjectAction,
+  RemoveProjectAction
+} from './projects.actions';
 import { ConfirmAction } from "../../barista.actions";
+import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs/Observable';
 
 @NgModule({
   imports: [
@@ -49,7 +54,13 @@ export class ProjectsModule {
         disableClose: true
       });
       
-      ref.afterClosed().subscribe(action)
+      ref.afterClosed().subscribe(project => {
+        if(!project) {
+          return action.next(project);
+        }
+        
+        dispatcher.dispatch(new CreateProjectAction(project)).subscribe(action);
+      })
     });
     
     dispatcher.for(UpdateProjectDialogAction).subscribe(action => {
@@ -58,13 +69,25 @@ export class ProjectsModule {
         data: action.project
       });
   
-      ref.afterClosed().subscribe(action)
+      ref.afterClosed().subscribe(project => {
+        if(!project) {
+          return action.next(project);
+        }
+  
+        dispatcher.dispatch(new UpdateProjectAction(project)).subscribe(action);
+      })
     });
     
     dispatcher.effectFor(RemoveProjectDialogAction, action => {
       const confirmAction = new ConfirmAction(`Delete project "${action.project.name}"?`);
       
-      confirmAction.subscribe(action);
+      confirmAction.mergeMap(confirm => {
+        if(confirm) {
+          return dispatcher.dispatch(new RemoveProjectAction(action.project)).map(() => true);
+        } else {
+          return Observable.of(false);
+        }
+      }).subscribe(action);
       
       return confirmAction;
     })

@@ -7,6 +7,7 @@ import { DispatcherService } from './dispatcher.service';
 import { Router } from '@angular/router';
 import { SetupAdministratorAction, SetupCheckAction } from "../setup/setup.actions";
 import { AuthCheckAction, LoginAction, LogoutAction } from '../login/login.actions';
+import { CreateProjectAction, UpdateProjectAction, RemoveProjectAction } from "../manage/projects/projects.actions";
 
 
 @Injectable()
@@ -85,8 +86,7 @@ export class ApiService {
           action.error(result.error);
         }
       } catch(e) {
-        console.log(e);
-        action.error(e.error && e.error.error || 'UNEXPECTED_ERROR');
+        action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
       }
     })
     
@@ -94,21 +94,36 @@ export class ApiService {
       localStorage.removeItem('Authorization');
       this.router.navigate([ '/login' ]);
       action.next();
-    })
+    });
+    
+    this.dispatcher.for(CreateProjectAction).subscribe(async action => {
+      try {
+        await this.http.post('/_api/projects', action.project).toPromise();
+        action.next(action.project);
+      } catch(e) {
+        action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
+      }
+    });
+    
+    this.dispatcher.for(UpdateProjectAction).subscribe(async action => {
+      try {
+        await this.http.put('/_api/projects', action.project).toPromise();
+        action.next(action.project);
+      } catch(e) {
+        action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
+      }
+    });
+    
+    this.dispatcher.for(RemoveProjectAction).subscribe(async action => {
+      try {
+        await this.http.delete('/_api/projects/' + action.project._id).toPromise();
+        action.next();
+      } catch(e) {
+        action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
+      }
+    });
   }
   
-  // setupCheck() : Promise<boolean> {
-  //   if(this.cache.has('setupCheck')) {
-  //       return this.cache.get('setupCheck');
-  //   }
-  //
-  //   const result = this.http.get('/_api/setup-check').map<{ message: string, result: boolean }, boolean>(res => res.result).toPromise();
-  //
-  //   this.cache.set('setupCheck', result);
-  //
-  //   return result;
-  // }
-  //
   clearCache(key? : string) {
     if(key) {
       this.cache.delete(key);
@@ -117,7 +132,4 @@ export class ApiService {
     }
   }
 
-  // setup(username : string, email : string, password : string) : Promise<{ success?: boolean, error?: string, token?: string }> {
-  //   return this.http.post('/_api/setup', { username, email, password }).toPromise();
-  // }
 }

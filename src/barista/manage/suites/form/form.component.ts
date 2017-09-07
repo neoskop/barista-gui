@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -13,6 +13,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   exportAs: 'form'
 })
 export class FormComponent implements OnInit {
+  @Input()
+  update : any;
+  
   protected browsers = Observable.of([
     'chrome',
     'firefox',

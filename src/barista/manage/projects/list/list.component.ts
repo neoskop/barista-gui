@@ -10,6 +10,7 @@ import { DispatcherService } from "../../../services/dispatcher.service";
 import { CreateProjectDialogAction, UpdateProjectDialogAction, RemoveProjectDialogAction } from '../projects.actions';
 import { HttpClient } from "@angular/common/http";
 import { ProjectsDataSource } from "../project.datasource";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'barista-list',
@@ -25,7 +26,7 @@ export class ListComponent implements OnInit {
   
   filter = new FormControl();
   
-  constructor(protected http : HttpClient, protected dispatcher : DispatcherService) { }
+  constructor(protected http : HttpClient, protected dispatcher : DispatcherService, protected router : Router) { }
 
   ngOnInit() {
     this.dataSource = new ProjectsDataSource(this.http, { sort: this.sort, paginator: this.paginator });
@@ -35,18 +36,28 @@ export class ListComponent implements OnInit {
   openCreateDialog() {
     this.dispatcher.dispatch(new CreateProjectDialogAction()).subscribe((result) => {
       console.log('project create', result);
+      
+      if(result) {
+        this.router.navigate([ '/manage', 'projects', result._id ]);
+      }
     })
   }
   
   openUpdateDialog(row : any) {
     this.dispatcher.dispatch(new UpdateProjectDialogAction(row)).subscribe((result) => {
       console.log('project update', result);
+      if(result) {
+        this.dataSource.reload();
+      }
     })
   }
   
   openRemoveDialog(row : any) {
     this.dispatcher.dispatch(new RemoveProjectDialogAction(row)).subscribe(result => {
       console.log('project remove', result);
+      if(result) {
+        this.dataSource.reload();
+      }
     })
   }
 }

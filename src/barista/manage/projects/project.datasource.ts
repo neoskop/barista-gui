@@ -16,6 +16,8 @@ export class ProjectsDataSource extends DataSource<any> {
   get length() { return this._lengthSubject.value }
   set length(length : number) { this._lengthSubject.next(length) }
   
+  protected _reloadTrigger = new Subject<void>();
+  
   protected sort : MdSort | null = null;
   protected paginator : MdPaginator | null = null;
   
@@ -31,8 +33,13 @@ export class ProjectsDataSource extends DataSource<any> {
     }
   }
   
+  reload() {
+    this._reloadTrigger.next();
+  }
+  
   connect() : Observable<any[]> {
     const changes : Subject<any>[] = [
+      this._reloadTrigger,
       this._filterSubject,
     ];
     
@@ -56,8 +63,8 @@ export class ProjectsDataSource extends DataSource<any> {
       this.http.get('/_api/projects', {
         params
       }).subscribe((result : any) => {
-        out.next(result.rows);
-        this.length = result.total;
+        out.next(result.result.rows);
+        this.length = result.result.total;
       })
     });
     

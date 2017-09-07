@@ -1,6 +1,7 @@
 <div [formGroup]="form" class="mat-typography">
   <md-form-field>
-    <input mdInput type="text" placeholder="Suite Identifier" formControlName="id" />
+    <input mdInput type="text" placeholder="Suite Identifier" formControlName="id" [readonly]="update ? true : null" />
+    <md-hint *ngIf="update" align="end">Can not be changed.</md-hint>
 
     <md-error *ngIf="form.get('id').invalid">
       <span *ngIf="form.get('id').hasError('required')">Identifier is <strong>required</strong></span>

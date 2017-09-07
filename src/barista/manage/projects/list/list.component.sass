@@ -1,22 +1,28 @@
-md-toolbar
-  [md-fab]
-    transform: translate(-16px, 50%)
-    z-index: 10
+\:host
+  md-toolbar
+    [md-fab]
+      transform: translate(-16px, 50%)
+      z-index: 10
 
-md-card
-  margin: 16px
+  md-card
+    margin: 16px
 
-.mat-column-id
-  flex: 0 0 120px
-.mat-column-name
-  flex: 0 0 250px
-.mat-column-repository-url
-  flex: 1 1 auto
-  text-overflow: ellipsis
-  overflow: hidden
-  white-space: nowrap
-.mat-column-repository-branch
-  flex: 0 0 150px
-.mat-column-actions
-  flex: 0 0 84px
-  white-space: nowrap
+  md-row.mat-row, md-header-row.mat-header-row
+    padding: 0 0 0 12px
+
+  .mat-column-id
+    flex: 0 0 120px
+  .mat-column-name
+    flex: 0 0 250px
+  .mat-column-repository-url
+    flex: 1 1 auto
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
+  .mat-column-repository-branch
+    flex: 0 0 150px
+  .mat-column-actions
+    flex: 0 0 84px
+    white-space: nowrap
+
+

@@ -20,3 +20,21 @@ export class RemoveProjectDialogAction extends Action<boolean> {
     super();
   }
 }
+
+export class CreateProjectAction extends Action<void> {
+  constructor(public project : any) {
+    super();
+  }
+}
+
+export class UpdateProjectAction extends Action<void> {
+  constructor(public project : any) {
+    super();
+  }
+}
+
+export class RemoveProjectAction extends Action<void> {
+  constructor(public project : any) {
+    super();
+  }
+}

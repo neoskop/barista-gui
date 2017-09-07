@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -8,7 +8,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   exportAs: 'form'
 })
 export class FormComponent implements OnInit {
-
+  @Input()
+  update : any;
+  
   displayPassphrase = false;
   
   form = new FormGroup({

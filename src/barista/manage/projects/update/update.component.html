@@ -2,7 +2,7 @@
   <span fxFlex="1 0 auto">Project - Update</span>
 </md-toolbar>
 <form (submit)="submit()">
-  <barista-form #update="form"></barista-form>
+  <barista-form #update="form" update="true"></barista-form>
   <div class="footer-buttons">
     <button md-raised-button button color="primary" [disabled]="update.form.invalid" type="submit">Save</button>
     <button md-raised-button type="button" (click)="cancel()">Cancel</button>

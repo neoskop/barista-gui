@@ -12,10 +12,6 @@ const routes : Routes = [
         loadChildren: './projects/projects.module#ProjectsModule'
       },
       {
-        path: 'suites',
-        loadChildren: './suites/suites.module#SuitesModule'
-      },
-      {
         path: '**',
         redirectTo: 'projects'
       }
