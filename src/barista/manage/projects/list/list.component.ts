@@ -7,10 +7,10 @@ import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { DispatcherService } from "../../../services/dispatcher.service";
-import { CreateProjectDialogAction, UpdateProjectDialogAction, RemoveProjectDialogAction } from '../projects.actions';
+import { CreateProjectDialogAction, RemoveProjectDialogAction, SearchProjectAction, UpdateProjectDialogAction } from '../projects.actions';
 import { HttpClient } from "@angular/common/http";
-import { ProjectsDataSource } from "../project.datasource";
 import { Router } from '@angular/router';
+import { BaristaDataSource } from '../../../datasource';
 
 @Component({
   selector: 'barista-list',
@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 })
 export class ListComponent implements OnInit {
   displayColumns = [ 'id', 'name', 'repository.url', 'repository.branch', 'actions' ];
-  dataSource : ProjectsDataSource | null = null;
+  dataSource : BaristaDataSource | null = null;
   
   @ViewChild(MdSort) sort : MdSort;
   @ViewChild(MdPaginator) paginator : MdPaginator;
@@ -29,7 +29,7 @@ export class ListComponent implements OnInit {
   constructor(protected http : HttpClient, protected dispatcher : DispatcherService, protected router : Router) { }
 
   ngOnInit() {
-    this.dataSource = new ProjectsDataSource(this.http, { sort: this.sort, paginator: this.paginator });
+    this.dataSource = new BaristaDataSource(this.dispatcher, { actionClass: SearchProjectAction, sort: this.sort, paginator: this.paginator });
     this.filter.valueChanges.debounceTime(250).distinctUntilChanged().subscribe(value => this.dataSource.filter = value);
   }
 

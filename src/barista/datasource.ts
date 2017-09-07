@@ -5,9 +5,26 @@ import { MdPaginator, MdSort } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Action, DispatcherService } from './services/dispatcher.service';
+
+export interface ISearchParams {
+  filter?: string;
+  sort?: string;
+  order?: string;
+  offset?: number;
+  limit?: number;
+}
+
+export interface ISearchAction extends Action<any[]> {
+  params: ISearchParams;
+}
+
+export interface ISearchActionContructor {
+  new(...args : any[]) : ISearchAction;
+}
 
 @Injectable()
-export class ProjectsDataSource extends DataSource<any> {
+export class BaristaDataSource extends DataSource<any> {
   protected _filterSubject = new BehaviorSubject('');
   get filter() { return this._filterSubject.value }
   set filter(filter : string) { this._filterSubject.next(filter) }
@@ -21,8 +38,18 @@ export class ProjectsDataSource extends DataSource<any> {
   protected sort : MdSort | null = null;
   protected paginator : MdPaginator | null = null;
   
+  protected actionClass : ISearchActionContructor;
+  protected actionClassFactory : (params : ISearchParams) => ISearchAction = params => new this.actionClass(params);
   
-  constructor(protected http : HttpClient, { sort, paginator } : { sort? : MdSort, paginator? : MdPaginator } = {}) {
+  constructor(protected dispatcher : DispatcherService, {
+    actionClass,
+    actionClassFactory,
+    sort,
+    paginator } : {
+    actionClass? : ISearchActionContructor,
+    actionClassFactory?: (params : ISearchParams) => ISearchAction,
+    sort? : MdSort,
+    paginator? : MdPaginator } = {}) {
     super();
     
     if(sort) {
@@ -30,6 +57,12 @@ export class ProjectsDataSource extends DataSource<any> {
     }
     if(paginator) {
       this.paginator = paginator;
+    }
+    if(actionClass) {
+      this.actionClass = actionClass;
+    }
+    if(actionClassFactory) {
+      this.actionClassFactory = actionClassFactory;
     }
   }
   
@@ -53,19 +86,16 @@ export class ProjectsDataSource extends DataSource<any> {
     const out = new Subject<any>();
     
     Observable.merge(...changes).debounceTime(15).subscribe(() => {
-      let params = new HttpParams();
-      params = params.set('filter', this.filter);
-      params = params.set('sort', this.sort.active);
-      params = params.set('order', this.sort.direction);
-      params = params.set('offset', (this.paginator.pageIndex * this.paginator.pageSize).toString());
-      params = params.set('limit', this.paginator.pageSize.toString());
-      
-      this.http.get('/_api/projects', {
-        params
-      }).subscribe((result : any) => {
-        out.next(result.result.rows);
-        this.length = result.result.total;
-      })
+      this.dispatcher.dispatch<any>(this.actionClassFactory({
+        filter: this.filter,
+        sort: this.sort.active,
+        order: this.sort.direction,
+        offset: this.paginator.pageIndex * this.paginator.pageSize,
+        limit: this.paginator.pageSize
+      })).subscribe(result => {
+        out.next(result.rows);
+        this.length = result.total;
+      });
     });
     
     return out;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/repeat';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -7,7 +7,14 @@ import { DispatcherService } from './dispatcher.service';
 import { Router } from '@angular/router';
 import { SetupAdministratorAction, SetupCheckAction } from "../setup/setup.actions";
 import { AuthCheckAction, LoginAction, LogoutAction } from '../login/login.actions';
-import { CreateProjectAction, UpdateProjectAction, RemoveProjectAction } from "../manage/projects/projects.actions";
+import {
+  CreateProjectAction, UpdateProjectAction, RemoveProjectAction, ReadProjectAction, CreateSuiteAction, UpdateSuiteAction,
+  RemoveSuiteAction,
+  ReadSuiteAction, SearchProjectAction, SearchSuiteAction
+} from "../manage/projects/projects.actions";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 
 
 @Injectable()
@@ -94,6 +101,30 @@ export class ApiService {
       localStorage.removeItem('Authorization');
       this.router.navigate([ '/login' ]);
       action.next();
+    });
+    
+    this.dispatcher.for(SearchProjectAction).subscribe(action => {
+      let params = new HttpParams();
+      if(action.params.filter) {
+        params = params.set('filter', action.params.filter);
+      }
+      if(action.params.sort) {
+        params = params.set('sort', action.params.sort);
+      }
+      if(action.params.order) {
+        params = params.set('order', action.params.order);
+      }
+      if(action.params.offset) {
+        params = params.set('offset', action.params.offset.toString());
+      }
+      if(action.params.limit) {
+        params = params.set('limit', action.params.limit.toString());
+      }
+      this.http.get('/_api/projects/', { params })
+        .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+        .map<any, any>(result => result.result)
+        .subscribe(action);
+        
     });
     
     this.dispatcher.for(CreateProjectAction).subscribe(async action => {

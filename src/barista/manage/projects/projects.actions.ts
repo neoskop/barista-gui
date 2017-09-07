@@ -1,6 +1,7 @@
 import { Action } from '../../services/dispatcher.service';
 import { CreateComponent } from './create/create.component';
 import { UpdateComponent } from './update/update.component';
+import { ISearchAction } from '../../datasource';
 
 export class CreateProjectDialogAction extends Action<void|any> {
   readonly component = CreateComponent;
@@ -21,7 +22,19 @@ export class RemoveProjectDialogAction extends Action<boolean> {
   }
 }
 
-export class CreateProjectAction extends Action<void> {
+export class SearchProjectAction extends Action<any[]> implements ISearchAction {
+  constructor(public params : {
+    filter?: string;
+    sort?: string;
+    order?: string;
+    offset?: number;
+    limit?: number;
+  }) {
+    super();
+  }
+}
+
+export class CreateProjectAction extends Action<any> {
   constructor(public project : any) {
     super();
   }
