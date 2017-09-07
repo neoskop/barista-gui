@@ -16,7 +16,8 @@ import { CreateComponent } from './create/create.component';
 import { DispatcherService } from "../../services/dispatcher.service";
 import { RadioTabsDirective, RadioTabValueDirective } from "../../directives/radio-tabs.directive";
 import { UpdateComponent } from './update/update.component';
-import { CreateProjectDialogAction, UpdateProjectDialogAction } from './projects.actions';
+import { CreateProjectDialogAction, RemoveProjectDialogAction, UpdateProjectDialogAction } from './projects.actions';
+import { ConfirmAction } from "../../barista.actions";
 
 @NgModule({
   imports: [
@@ -58,6 +59,14 @@ export class ProjectsModule {
       });
   
       ref.afterClosed().subscribe(action)
+    });
+    
+    dispatcher.effectFor(RemoveProjectDialogAction, action => {
+      const confirmAction = new ConfirmAction(`Delete project "${action.project.name}"?`);
+      
+      confirmAction.subscribe(action);
+      
+      return confirmAction;
     })
   }
 }

@@ -7,7 +7,7 @@ import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { DispatcherService } from "../../../services/dispatcher.service";
-import { CreateProjectDialogAction, UpdateProjectDialogAction } from '../projects.actions';
+import { CreateProjectDialogAction, UpdateProjectDialogAction, RemoveProjectDialogAction } from '../projects.actions';
 import { HttpClient } from "@angular/common/http";
 import { ProjectsDataSource } from "../project.datasource";
 
@@ -41,6 +41,12 @@ export class ListComponent implements OnInit {
   openUpdateDialog(row : any) {
     this.dispatcher.dispatch(new UpdateProjectDialogAction(row)).subscribe((result) => {
       console.log('project update', result);
+    })
+  }
+  
+  openRemoveDialog(row : any) {
+    this.dispatcher.dispatch(new RemoveProjectDialogAction(row)).subscribe(result => {
+      console.log('project remove', result);
     })
   }
 }

@@ -14,3 +14,9 @@ export class UpdateProjectDialogAction extends Action<void|any> {
     super();
   }
 }
+
+export class RemoveProjectDialogAction extends Action<boolean> {
+  constructor(public project : any) {
+    super();
+  }
+}
