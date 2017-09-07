@@ -19,12 +19,12 @@
         <md-cell *mdCellDef="let row">{{ row.name }}</md-cell>
       </ng-container>
 
-      <ng-container mdColumnDef="url">
+      <ng-container mdColumnDef="repository.url">
         <md-header-cell *mdHeaderCellDef md-sort-header>Repository URL</md-header-cell>
         <md-cell *mdCellDef="let row">{{ row.repository.url }}</md-cell>
       </ng-container>
 
-      <ng-container mdColumnDef="branch">
+      <ng-container mdColumnDef="repository.branch">
         <md-header-cell *mdHeaderCellDef md-sort-header>Repository Branch</md-header-cell>
         <md-cell *mdCellDef="let row">{{ row.repository.branch }}</md-cell>
       </ng-container>
@@ -39,7 +39,7 @@
     </md-table>
 
     <md-paginator #paginator
-                  [length]="2"
+                  [length]="dataSource.length"
                   [pageIndex]="0"
                   [pageSize]="25"
                   [pageSizeOptions]="[5, 10, 25, 100]">
