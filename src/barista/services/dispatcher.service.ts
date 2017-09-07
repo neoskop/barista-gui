@@ -24,10 +24,9 @@ export class DispatcherService {
   protected effects = new WeakMap<Ctor<any>, Function>();
   
   constructor() {
-    
+  
   }
   
-  dispatch<T>(action : Action<T>) : Action<T>
   dispatch<T>(value : T) : T {
     setTimeout(() => {
       this.root.next(value);
