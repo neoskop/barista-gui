@@ -40,7 +40,7 @@ export class CreateProjectAction extends Action<any> {
   }
 }
 
-export class UpdateProjectAction extends Action<void> {
+export class UpdateProjectAction extends Action<any> {
   constructor(public project : any) {
     super();
   }
@@ -48,6 +48,12 @@ export class UpdateProjectAction extends Action<void> {
 
 export class RemoveProjectAction extends Action<void> {
   constructor(public project : any) {
+    super();
+  }
+}
+
+export class ReadProjectAction extends Action<any> {
+  constructor(public projectId : string) {
     super();
   }
 }

@@ -9,7 +9,7 @@ const routes: Routes = [
     component: ListComponent
   },
   {
-    path: ':id',
+    path: ':project',
     loadChildren: '../suites/suites.module#SuitesModule'
   }
 ];

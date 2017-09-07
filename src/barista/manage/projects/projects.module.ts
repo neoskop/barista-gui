@@ -60,7 +60,7 @@ export class ProjectsModule {
         }
         
         dispatcher.dispatch(new CreateProjectAction(project)).subscribe(action);
-      })
+      });
     });
     
     dispatcher.for(UpdateProjectDialogAction).subscribe(action => {
@@ -75,7 +75,7 @@ export class ProjectsModule {
         }
   
         dispatcher.dispatch(new UpdateProjectAction(project)).subscribe(action);
-      })
+      });
     });
     
     dispatcher.effectFor(RemoveProjectDialogAction, action => {
@@ -90,6 +90,6 @@ export class ProjectsModule {
       }).subscribe(action);
       
       return confirmAction;
-    })
+    });
   }
 }

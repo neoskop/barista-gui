@@ -8,13 +8,12 @@ import { Router } from '@angular/router';
 import { SetupAdministratorAction, SetupCheckAction } from "../setup/setup.actions";
 import { AuthCheckAction, LoginAction, LogoutAction } from '../login/login.actions';
 import {
-  CreateProjectAction, UpdateProjectAction, RemoveProjectAction, ReadProjectAction, CreateSuiteAction, UpdateSuiteAction,
-  RemoveSuiteAction,
-  ReadSuiteAction, SearchProjectAction, SearchSuiteAction
+  CreateProjectAction, UpdateProjectAction, RemoveProjectAction, ReadProjectAction, SearchProjectAction
 } from "../manage/projects/projects.actions";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import { SearchSuiteAction, CreateSuiteAction, UpdateSuiteAction, RemoveSuiteAction, ReadSuiteAction } from "../manage/suites/suites.actions";
 
 
 @Injectable()
@@ -153,6 +152,71 @@ export class ApiService {
         action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
       }
     });
+    
+    this.dispatcher.for(ReadProjectAction).subscribe(action => {
+      this.http.get('/_api/projects/' + action.projectId)
+        .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+        .map<any, any>(result => result.result)
+        .subscribe(action);
+    });
+  
+    this.dispatcher.for(SearchSuiteAction).subscribe(action => {
+      let params = new HttpParams();
+      if(action.params.filter) {
+        params = params.set('filter', action.params.filter);
+      }
+      if(action.params.sort) {
+        params = params.set('sort', action.params.sort);
+      }
+      if(action.params.order) {
+        params = params.set('order', action.params.order);
+      }
+      if(action.params.offset) {
+        params = params.set('offset', action.params.offset.toString());
+      }
+      if(action.params.limit) {
+        params = params.set('limit', action.params.limit.toString());
+      }
+      this.http.get(`/_api/projects/${action.projectId}/suites`, { params })
+        .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+        .map<any, any>(result => result.result)
+        .subscribe(action);
+    
+    });
+    
+    this.dispatcher.for(CreateSuiteAction).subscribe(async action => {
+      try {
+        await this.http.post(`/_api/projects/${action.projectId}/suites`, action.suite).toPromise();
+        action.next(action.suite);
+      } catch(e) {
+        action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
+      }
+    });
+    
+    this.dispatcher.for(UpdateSuiteAction).subscribe(async action => {
+      try {
+        await this.http.put(`/_api/projects/${action.projectId}/suites`, action.suite).toPromise();
+        action.next(action.suite);
+      } catch(e) {
+        action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
+      }
+    });
+    
+    this.dispatcher.for(RemoveSuiteAction).subscribe(async action => {
+      try {
+        await this.http.delete(`/_api/projects/${action.projectId}/suites/${action.suite.id}`).toPromise();
+        action.next();
+      } catch(e) {
+        action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
+      }
+    });
+    
+    this.dispatcher.for(ReadSuiteAction).subscribe(action => {
+      this.http.get(`/_api/projects/${action.projectId}/suites/${action.suiteId}`)
+        .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+        .map<any, any>(result => result.result)
+        .subscribe(action);
+    })
   }
   
   clearCache(key? : string) {

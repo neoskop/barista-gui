@@ -1,12 +1,12 @@
 <md-toolbar color="secondary">
-  <span fxFlex="1 0 auto">Suites</span>
+  <span fxFlex="1 0 auto">{{ project?.name }} - Suites</span>
   <button md-fab (click)="openCreateDialog()"><md-icon>add</md-icon></button>
 </md-toolbar>
 
 <md-card>
   <md-card-content>
     <md-form-field>
-      <input mdInput type="search" placeholder="Filter projects" [formControl]="filter">
+      <input mdInput type="search" placeholder="Filter suites" [formControl]="filter">
     </md-form-field>
     <md-table #table [dataSource]="dataSource" mdSort>
       <ng-container mdColumnDef="id">
@@ -21,7 +21,10 @@
 
       <ng-container mdColumnDef="actions">
         <md-header-cell *mdHeaderCellDef></md-header-cell>
-        <md-cell *mdCellDef="let row"><button md-icon-button (click)="openUpdateDialog(row)"><md-icon>mode_edit</md-icon></button></md-cell>
+        <md-cell *mdCellDef="let row">
+          <button md-icon-button (click)="openUpdateDialog(row)"><md-icon>mode_edit</md-icon></button>
+          <button md-icon-button (click)="openRemoveDialog(row)"><md-icon>delete_forever</md-icon></button>
+        </md-cell>
       </ng-container>
 
       <md-header-row *mdHeaderRowDef="displayColumns"></md-header-row>
@@ -29,7 +32,7 @@
     </md-table>
 
     <md-paginator #paginator
-                  [length]="2"
+                  [length]="dataSource.length"
                   [pageIndex]="0"
                   [pageSize]="25"
                   [pageSizeOptions]="[5, 10, 25, 100]">
