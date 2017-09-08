@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
-import { DispatcherService } from "../services/dispatcher.service";
 import { Observable } from 'rxjs/Observable';
 import { AuthCheckAction } from './login.actions';
+import { Dispatcher } from '../../dispatcher/dispatcher';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(protected dispatcher : DispatcherService) {
+  constructor(protected dispatcher : Dispatcher) {
   
   }
   

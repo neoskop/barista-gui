@@ -1,6 +1,6 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { DispatcherService } from '../../services/dispatcher.service';
+import { Component, OnInit } from '@angular/core';
 import { LogoutAction } from "../../login/login.actions";
+import { Dispatcher } from '../../../dispatcher/dispatcher';
 
 @Component({
   selector: 'barista-manage',
@@ -13,7 +13,7 @@ export class ManageComponent implements OnInit {
     return document.documentElement.clientWidth >= 960;
   }
   
-  constructor(protected dispatcher : DispatcherService) { }
+  constructor(protected dispatcher : Dispatcher) { }
 
   ngOnInit() {
   }

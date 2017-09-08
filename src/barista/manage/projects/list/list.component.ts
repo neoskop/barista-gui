@@ -6,11 +6,11 @@ import 'rxjs/add/operator/map';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
-import { DispatcherService } from "../../../services/dispatcher.service";
 import { CreateProjectDialogAction, RemoveProjectDialogAction, SearchProjectAction, UpdateProjectDialogAction } from '../projects.actions';
 import { HttpClient } from "@angular/common/http";
 import { Router } from '@angular/router';
 import { BaristaDataSource } from '../../../datasource';
+import { Dispatcher } from "../../../../dispatcher/dispatcher";
 
 @Component({
   selector: 'barista-list',
@@ -26,7 +26,7 @@ export class ListComponent implements OnInit {
   
   filter = new FormControl();
   
-  constructor(protected http : HttpClient, protected dispatcher : DispatcherService, protected router : Router) { }
+  constructor(protected http : HttpClient, protected dispatcher : Dispatcher, protected router : Router) { }
 
   ngOnInit() {
     this.dataSource = new BaristaDataSource(this.dispatcher, { actionClass: SearchProjectAction, sort: this.sort, paginator: this.paginator });

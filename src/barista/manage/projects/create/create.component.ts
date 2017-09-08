@@ -1,5 +1,4 @@
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { Action } from '../../../services/dispatcher.service';
 import { MdDialogRef } from '@angular/material';
 import { FormComponent } from '../form/form.component';
 

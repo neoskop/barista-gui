@@ -1,9 +1,9 @@
 import { ConfirmComponent } from './components/confirm/confirm.component';
 import { ComponentType } from '@angular/cdk/portal';
-import { Action } from './services/dispatcher.service';
 import { MdDialogConfig } from '@angular/material';
+import { Action } from '../dispatcher/dispatcher';
 
-export class ConfirmAction extends Action<boolean> {
+export class ConfirmDialogAction extends Action<boolean> {
   text : string;
   confirmBtnText : string;
   cancelBtnText : string;

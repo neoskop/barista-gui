@@ -1,16 +1,16 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { SetupCheckGuard } from './setup-check.guard';
-import { DispatcherService } from "../services/dispatcher.service";
 import { SetupCheckAction } from "./setup.actions";
+import { Dispatcher } from '../../dispatcher/dispatcher';
 
 describe('SetupCheckGuard', () => {
-  let spy : jasmine.SpyObj<DispatcherService>;
+  let spy : jasmine.SpyObj<Dispatcher>;
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         SetupCheckGuard,
-        { provide: DispatcherService, useValue: spy = jasmine.createSpyObj<DispatcherService>('DispatcherService', [ 'dispatch' ])}
+        { provide: Dispatcher, useValue: spy = jasmine.createSpyObj<Dispatcher>('DispatcherService', [ 'dispatch' ])}
       ]
     });
   });

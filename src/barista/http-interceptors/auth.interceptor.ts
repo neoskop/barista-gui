@@ -2,13 +2,13 @@ import { HttpEvent, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpReques
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { DispatcherService } from '../services/dispatcher.service';
 import { LogoutAction } from '../login/login.actions';
+import { Dispatcher } from '../../dispatcher/dispatcher';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   
-  constructor(protected dispatcher : DispatcherService) {
+  constructor(protected dispatcher : Dispatcher) {
   
   }
   

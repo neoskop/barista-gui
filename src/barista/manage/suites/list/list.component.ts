@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MdPaginator, MdSort } from '@angular/material';
 import { FormControl } from '@angular/forms';
-import { DispatcherService } from '../../../services/dispatcher.service';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
@@ -10,6 +9,7 @@ import { CreateSuiteDialogAction, UpdateSuiteDialogAction, RemoveSuiteDialogActi
 import { ActivatedRoute } from '@angular/router';
 import { ReadProjectAction } from '../../projects/projects.actions';
 import { BaristaDataSource, ISearchParams } from "../../../datasource";
+import { Dispatcher } from "../../../../dispatcher/dispatcher";
 
 @Component({
   selector: 'barista-list',
@@ -32,7 +32,7 @@ export class ListComponent implements OnInit {
     return new SearchSuiteAction(this.projectId, params);
   };
   
-  constructor(protected route : ActivatedRoute, protected dispatcher : DispatcherService) { }
+  constructor(protected route : ActivatedRoute, protected dispatcher : Dispatcher) { }
   
   ngOnInit() {
     this.dataSource = new BaristaDataSource(this.dispatcher, { actionClassFactory: this.actionClassFactory, sort: this.sort, paginator: this.paginator });

@@ -1,7 +1,7 @@
-import { Action } from '../../services/dispatcher.service';
 import { CreateComponent } from './create/create.component';
 import { UpdateComponent } from './update/update.component';
 import { ISearchAction } from "../../datasource";
+import { Action } from '../../../dispatcher/dispatcher';
 
 export class CreateSuiteDialogAction extends Action<void|any> {
   readonly component = CreateComponent;

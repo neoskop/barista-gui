@@ -1,4 +1,4 @@
-import { Action } from '../services/dispatcher.service';
+import { Action } from "../../dispatcher/dispatcher";
 
 export class LoginAction extends Action<void> {
   constructor(public username : string, public password : string) {

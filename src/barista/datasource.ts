@@ -4,8 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { MdPaginator, MdSort } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Action, DispatcherService } from './services/dispatcher.service';
+import { Action, Dispatcher } from '../dispatcher/dispatcher';
 
 export interface ISearchParams {
   filter?: string;
@@ -41,7 +40,7 @@ export class BaristaDataSource extends DataSource<any> {
   protected actionClass : ISearchActionContructor;
   protected actionClassFactory : (params : ISearchParams) => ISearchAction = params => new this.actionClass(params);
   
-  constructor(protected dispatcher : DispatcherService, {
+  constructor(protected dispatcher : Dispatcher, {
     actionClass,
     actionClassFactory,
     sort,

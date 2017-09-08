@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DispatcherService } from '../../services/dispatcher.service';
 import { LoginAction } from "../login.actions";
+import { Dispatcher } from "../../../dispatcher/dispatcher";
 
 @Component({
   selector: 'barista-login',
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl(null, [ Validators.required ])
   });
   
-  constructor(protected dispatcher : DispatcherService) { }
+  constructor(protected dispatcher : Dispatcher) { }
 
   ngOnInit() {
   }

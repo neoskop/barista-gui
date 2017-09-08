@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { DispatcherService } from '../../services/dispatcher.service';
 import { SetupAdministratorAction } from '../setup.actions';
+import { Dispatcher } from "../../../dispatcher/dispatcher";
 
 @Component({
   selector: 'barista-administrator',
@@ -41,7 +41,7 @@ export class AdministratorComponent implements OnInit {
     ])
   });
   
-  constructor(protected dispatcher : DispatcherService) { }
+  constructor(protected dispatcher : Dispatcher) { }
 
   ngOnInit() {
   }

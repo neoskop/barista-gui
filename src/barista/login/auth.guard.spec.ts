@@ -1,16 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { AuthGuard } from './auth.guard';
-import { DispatcherService } from "../services/dispatcher.service";
 import { AuthCheckAction } from './login.actions';
+import { Dispatcher } from '../../dispatcher/dispatcher';
 
 describe('AuthGuard', () => {
-  let spy : jasmine.SpyObj<DispatcherService>;
+  let spy : jasmine.SpyObj<Dispatcher>;
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         AuthGuard,
-        { provide: DispatcherService, useValue: spy = jasmine.createSpyObj<DispatcherService>('DispatcherService', [ 'dispatch' ])}
+        { provide: Dispatcher, useValue: spy = jasmine.createSpyObj<Dispatcher>('DispatcherService', [ 'dispatch' ])}
       ]
     });
   });

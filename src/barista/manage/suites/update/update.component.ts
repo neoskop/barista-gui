@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormComponent } from '../form/form.component';
 import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
-import { Action } from '../../../services/dispatcher.service';
 
 @Component({
   selector: 'barista-update',
