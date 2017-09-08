@@ -15,6 +15,7 @@ export class DispatcherModule {
     return {
       ngModule: RootDispatcherModule,
       providers: [
+        Dispatcher,
         rootEffects,
         {
           provide: ROOT_EFFECTS,
@@ -42,11 +43,7 @@ export class DispatcherModule {
 }
 
 
-@NgModule({
-  providers: [
-    Dispatcher
-  ]
-})
+@NgModule({})
 export class RootDispatcherModule {
   constructor(protected dispatcher : Dispatcher,
               @Inject(ROOT_EFFECTS) rootEffects : any[]) {

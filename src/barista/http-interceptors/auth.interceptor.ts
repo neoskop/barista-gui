@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
@@ -23,8 +23,8 @@ export class AuthInterceptor implements HttpInterceptor {
       })
     }
     
-    return next.handle(req).do(event => {
-      if(event instanceof HttpHeaderResponse) {
+    return next.handle(req).do(null, event => {
+      if(event instanceof HttpErrorResponse) {
         if(event.status === 401) {
           this.dispatcher.dispatch(new LogoutAction());
         }
