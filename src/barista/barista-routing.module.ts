@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { SetupCheckGuard } from './setup/setup-check.guard';
-import { AuthGuard } from './login/auth.guard';
+import { HrbacGuard } from '../hrbac/ng/hrbac.guard';
 
 const routes: Routes = [
   {
@@ -12,12 +12,13 @@ const routes: Routes = [
   {
     path: 'manage',
     loadChildren: './manage/manage.module#ManageModule',
-    canActivate: [ SetupCheckGuard, AuthGuard ]
+    canActivate: [ SetupCheckGuard ]
   },
   {
     path: 'login',
     loadChildren: './login/login.module#LoginModule',
-    canActivate: [ SetupCheckGuard, AuthGuard ]
+    canActivate: [ SetupCheckGuard, HrbacGuard ],
+    data: { resourceId: 'login', privilege: 'display' }
   },
   {
     path: '',

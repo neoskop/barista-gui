@@ -14,6 +14,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { SearchSuiteAction, CreateSuiteAction, UpdateSuiteAction, RemoveSuiteAction, ReadSuiteAction } from "../manage/suites/suites.actions";
 import { Dispatcher } from "../../dispatcher/dispatcher";
+import { HierachicalRoleBaseAccessControl } from "../../hrbac/hrbac";
+import * as jwt from 'jwt-decode';
+import { RoleStore } from "../../hrbac/ng/role-store";
 
 
 @Injectable()
@@ -22,7 +25,9 @@ export class ApiService {
 
   constructor(protected http : HttpClient,
               protected dispatcher : Dispatcher,
-              protected router : Router) {
+              protected router : Router,
+              protected hrbac : HierachicalRoleBaseAccessControl,
+              protected roleStore : RoleStore) {
     
     dispatcher.for(SetupCheckAction).subscribe(a => this.setupCheck(a));
     dispatcher.for(AuthCheckAction).subscribe(a => this.authCheck(a));
@@ -54,6 +59,10 @@ export class ApiService {
   
     if(result.success) {
       localStorage.setItem('Authorization', result.token);
+      const token = jwt<{ aud: string, rol: string[] }>(result.token);
+  
+      this.hrbac.inherit(token.aud, ...token.rol);
+      this.roleStore.setRole(token.aud);
       this.clearCache('setupCheck');
       this.router.navigate([ '/' ]);
     }
@@ -104,6 +113,10 @@ export class ApiService {
     
       if(result.success) {
         localStorage.setItem('Authorization', result.token);
+        const token = jwt<{ aud: string, rol: string[] }>(result.token);
+  
+        this.hrbac.inherit(token.aud, ...token.rol);
+        this.roleStore.setRole(token.aud);
         this.router.navigate([ '/' ]);
         action.next();
       } else {
@@ -116,6 +129,7 @@ export class ApiService {
   
   logout(action : LogoutAction) {
     localStorage.removeItem('Authorization');
+    this.roleStore.setRole('guest');
     this.router.navigate([ '/login' ]);
     action.next();
   }

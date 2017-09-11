@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListComponent } from './list/list.component';
+import { HrbacGuard } from '../../../hrbac/ng/hrbac.guard';
 
 const routes: Routes = [
   {
@@ -10,7 +11,9 @@ const routes: Routes = [
   },
   {
     path: ':project',
-    loadChildren: '../suites/suites.module#SuitesModule'
+    loadChildren: '../suites/suites.module#SuitesModule',
+    canActivate: [ HrbacGuard ],
+    data: { resourceId: 'suites', privilege: 'list' }
   }
 ];
 

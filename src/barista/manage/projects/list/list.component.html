@@ -1,6 +1,6 @@
 <md-toolbar color="secondary">
   <span fxFlex="1 0 auto">Projects</span>
-  <button md-fab (click)="openCreateDialog()"><md-icon>add</md-icon></button>
+  <button md-fab (click)="openCreateDialog()" *neoAllowed="'projects'; privilege: 'create'"><md-icon>add</md-icon></button>
 </md-toolbar>
 
 <md-card>
@@ -32,9 +32,9 @@
       <ng-container mdColumnDef="actions">
         <md-header-cell *mdHeaderCellDef></md-header-cell>
         <md-cell *mdCellDef="let row">
-          <button md-icon-button [routerLink]="[ row._id ]"><md-icon>view_list</md-icon></button>
-          <button md-icon-button (click)="openUpdateDialog(row)"><md-icon>mode_edit</md-icon></button>
-          <button md-icon-button (click)="openRemoveDialog(row)"><md-icon>delete_forever</md-icon></button>
+          <button *neoAllowed="(row | entityResource:'projects'); privilege: 'read'" md-icon-button [routerLink]="[ row._id ]"><md-icon>view_list</md-icon></button>
+          <button *neoAllowed="(row | entityResource:'projects'); privilege: 'update'" md-icon-button (click)="openUpdateDialog(row)"><md-icon>mode_edit</md-icon></button>
+          <button *neoAllowed="(row | entityResource:'projects'); privilege: 'remove'" md-icon-button (click)="openRemoveDialog(row)"><md-icon>delete_forever</md-icon></button>
         </md-cell>
       </ng-container>
 

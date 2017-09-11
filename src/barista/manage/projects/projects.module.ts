@@ -25,6 +25,8 @@ import { UpdateComponent } from './update/update.component';
 import 'rxjs/add/operator/mergeMap';
 import { DispatcherModule } from "../../../dispatcher/dispatcher.module";
 import { ProjectsEffects } from "./projects.effects";
+import { HrbacModule } from "../../../hrbac/ng/hrbac.module";
+import { EntityResourcePipe } from "../../pipes/entity-resource.pipe";
 
 @NgModule({
   imports: [
@@ -44,9 +46,10 @@ import { ProjectsEffects } from "./projects.effects";
     MdTabsModule,
     MdCardModule,
     MdDialogModule,
-    DispatcherModule.forChild([ ProjectsEffects ])
+    DispatcherModule.forChild([ ProjectsEffects ]),
+    HrbacModule
   ],
-  declarations: [RadioTabsDirective, RadioTabValueDirective, ListComponent, FormComponent, CreateComponent, UpdateComponent],
+  declarations: [RadioTabsDirective, EntityResourcePipe, RadioTabValueDirective, ListComponent, FormComponent, CreateComponent, UpdateComponent],
   entryComponents: [ CreateComponent, UpdateComponent ]
 })
 export class ProjectsModule {}

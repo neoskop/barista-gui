@@ -8,6 +8,9 @@ import { HrbacGuard } from "./hrbac.guard";
 import { AllowedDirective, DeniedDirective } from "./directives";
 import { AllowedPipe, DeniedPipe } from './pipes';
 
+export function defaultRoleFactory() {
+  return new Role('guest');
+}
 
 @NgModule({
   declarations: [
@@ -15,13 +18,6 @@ import { AllowedPipe, DeniedPipe } from './pipes';
     DeniedDirective,
     AllowedPipe,
     DeniedPipe
-  ],
-  providers: [
-    HierachicalRoleBaseAccessControl,
-    RoleManager,
-    PermissionManager,
-    RoleStore,
-    { provide: DEFAULT_ROLE, useValue: new Role('guest') }
   ],
   exports: [
     AllowedDirective,
@@ -31,12 +27,18 @@ import { AllowedPipe, DeniedPipe } from './pipes';
   ]
 })
 export class HrbacModule {
-  static withRouter() : ModuleWithProviders {
+  static forRoot() : ModuleWithProviders {
     return {
       ngModule: HrbacModule,
       providers: [
+        HierachicalRoleBaseAccessControl,
+        RoleManager,
+        PermissionManager,
+        RoleStore,
+        { provide: DEFAULT_ROLE, deps: [], useFactory: defaultRoleFactory },
         HrbacGuard
       ]
     }
   }
+  
 }
