@@ -53,7 +53,7 @@ export class RemoveProjectAction extends Action<void> {
 }
 
 export class ReadProjectAction extends Action<any> {
-  constructor(public projectId : string) {
+  constructor(public projectId : string, public fetch? : string) {
     super();
   }
 }

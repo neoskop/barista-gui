@@ -44,7 +44,7 @@ export class CreateSuiteAction extends Action<any> {
 }
 
 export class UpdateSuiteAction extends Action<any> {
-  constructor(public projectId : string, public suite : string) {
+  constructor(public projectId : string, public suite : any) {
     super();
   }
 }

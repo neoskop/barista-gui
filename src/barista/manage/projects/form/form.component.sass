@@ -1,31 +1,36 @@
-md-form-field
-  width: 100%
+\:host
+  display: block
+  max-height: 70vh
+  overflow: auto
 
-  button
-    right: 8px
+  md-form-field
+    width: 100%
+
+    button
+      right: 8px
+      position: absolute
+
+    textarea
+      height: 100px
+      resize: none
+
+    input[type=file]
+      display: none
+
+  /deep/ md-tab-body
+    padding-top: 8px
+
+  .password-visibility-toggle
     position: absolute
+    right: 0
+    width: 32px
+    height: 32px
+    line-height: 32px
+    text-align: center
+    top: 0
+    cursor: pointer
+    user-select: none
 
-  textarea
-    height: 100px
-    resize: none
-
-  input[type=file]
-    display: none
-
-/deep/ md-tab-body
-  padding-top: 8px
-
-.password-visibility-toggle
-  position: absolute
-  right: 0
-  width: 32px
-  height: 32px
-  line-height: 32px
-  text-align: center
-  top: 0
-  cursor: pointer
-  user-select: none
-
-md-error > span
-  + span
-    display: none
+  md-error > span
+    + span
+      display: none

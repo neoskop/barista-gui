@@ -109,11 +109,11 @@ export class ApiService {
       const result = await this.http.post('/_api/login', {
         username: action.username,
         password: action.password
-      }).toPromise<{ success? : boolean, error? : string, token? : string }>();
+      }).toPromise<{ success? : boolean, error? : string, result? : string }>();
     
       if(result.success) {
-        localStorage.setItem('Authorization', result.token);
-        const token = jwt<{ aud: string, rol: string[] }>(result.token);
+        localStorage.setItem('Authorization', result.result);
+        const token = jwt<{ aud: string, rol: string[] }>(result.result);
   
         this.hrbac.inherit(token.aud, ...token.rol);
         this.roleStore.setRole(token.aud);
@@ -168,7 +168,7 @@ export class ApiService {
   
   async updateProject(action : UpdateProjectAction) {
     try {
-      await this.http.put('/_api/projects', action.project).toPromise();
+      await this.http.put(`/_api/projects/${action.project._id}`, action.project).toPromise();
       action.next(action.project);
     } catch(e) {
       action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
@@ -177,7 +177,7 @@ export class ApiService {
   
   async removeProject(action : RemoveProjectAction) {
     try {
-      await this.http.delete('/_api/projects/' + action.project._id).toPromise();
+      await this.http.delete(`/_api/projects/${action.project._id}`).toPromise();
       action.next();
     } catch(e) {
       action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
@@ -185,7 +185,11 @@ export class ApiService {
   }
   
   async readProject(action : ReadProjectAction) {
-    this.http.get('/_api/projects/' + action.projectId)
+    let params = new HttpParams();
+    if(action.fetch) {
+      params = params.set('fetch', action.fetch);
+    }
+    this.http.get('/_api/projects/' + action.projectId, { params })
       .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
       .map<any, any>(result => result.result)
       .subscribe(action);
@@ -226,7 +230,7 @@ export class ApiService {
   
   async updateSuite(action : UpdateSuiteAction) {
     try {
-      await this.http.put(`/_api/projects/${action.projectId}/suites`, action.suite).toPromise();
+      await this.http.put(`/_api/projects/${action.projectId}/suites/${action.suite.id}`, action.suite).toPromise();
       action.next(action.suite);
     } catch(e) {
       action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');

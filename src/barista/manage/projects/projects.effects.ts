@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { EffectFor } from '../../../dispatcher/metadata';
 import {
   CreateProjectDialogAction, RemoveProjectDialogAction, RemoveProjectAction, CreateProjectAction,
-  UpdateProjectDialogAction, UpdateProjectAction
+  UpdateProjectDialogAction, UpdateProjectAction, ReadProjectAction
 } from './projects.actions';
 import { Observable } from 'rxjs/Observable';
 import { MdDialog } from '@angular/material';
@@ -37,20 +37,22 @@ export class ProjectsEffects {
   @EffectFor(UpdateProjectDialogAction)
   updateProjectDialog(o : Observable<UpdateProjectDialogAction>) {
     return o.mergeMap(action => {
-      const ref = this.dialog.open(action.component, {
-        disableClose: true,
-        data: action.project
-      });
+      return this.dispatcher.dispatch(new ReadProjectAction(action.project._id, 'all')).mergeMap(project => {
+        const ref = this.dialog.open(action.component, {
+          disableClose: true,
+          data        : project
+        });
+  
+        return ref.afterClosed().map(result => {
+          if(result) {
+            const updateAction = new UpdateProjectAction(result);
+            updateAction.subscribe(action);
       
-      return ref.afterClosed().map(result => {
-        if(result) {
-          const updateAction = new UpdateProjectAction(result);
-          updateAction.subscribe(action);
-    
-          return updateAction;
-        } else {
-          action.next(result);
-        }
+            return updateAction;
+          } else {
+            action.next(result);
+          }
+        });
       });
     });
   }
