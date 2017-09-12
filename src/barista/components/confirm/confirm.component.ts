@@ -9,7 +9,7 @@ import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
 export class ConfirmComponent implements OnInit {
 
   constructor(@Optional() protected dialogRef : MdDialogRef<ConfirmComponent>,
-              @Optional() @Inject(MD_DIALOG_DATA) protected action : any) { }
+              @Optional() @Inject(MD_DIALOG_DATA) public action : any) { }
 
   ngOnInit() {
   }

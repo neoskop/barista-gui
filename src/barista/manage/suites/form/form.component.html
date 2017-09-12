@@ -28,7 +28,7 @@
            (keydown.enter)="add('glob', globInput, globInput.value);$event.stopPropagation()" />
   </md-form-field>
   <md-chip-list #globList formArrayName="glob">
-    <md-chip *ngFor="let control of form.get('glob').controls; let index = index" (remove)="remove('glob', index)">
+    <md-chip *ngFor="let control of globControls; let index = index" (remove)="remove('glob', index)">
       <input type="hidden" [formControlName]="index" />
       {{control.value}}
       <md-icon mdChipRemove>cancel</md-icon>
@@ -46,7 +46,7 @@
   </md-form-field>
 
   <md-chip-list #browsersList formArrayName="browsers">
-    <md-chip *ngFor="let control of form.get('browsers').controls; let index = index" (remove)="remove('browser', index)">
+    <md-chip *ngFor="let control of browsersControls; let index = index" (remove)="remove('browser', index)">
       <input type="hidden" [formControlName]="index" />
       {{control.value}}
       <md-icon mdChipRemove>cancel</md-icon>

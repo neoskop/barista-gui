@@ -42,6 +42,13 @@ export class FormComponent implements OnInit {
     })
   });
   
+  get globControls() {
+    return (this.form.get('glob') as FormArray).controls;
+  }
+  
+  get browsersControls() {
+    return (this.form.get('browsers') as FormArray).controls;
+  }
   
   globInput = new FormControl(null);
   browserInput = new FormControl(null);

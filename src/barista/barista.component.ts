@@ -8,7 +8,7 @@ import { LoadingInterceptor } from './http-interceptors/loading.interceptor';
 })
 export class BaristaComponent {
   
-  constructor(protected loadingInterceptor : LoadingInterceptor) {
+  constructor(public loadingInterceptor : LoadingInterceptor) {
   
   }
 }

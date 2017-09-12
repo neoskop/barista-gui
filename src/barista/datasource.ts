@@ -22,7 +22,6 @@ export interface ISearchActionContructor {
   new(...args : any[]) : ISearchAction;
 }
 
-@Injectable()
 export class BaristaDataSource extends DataSource<any> {
   protected _filterSubject = new BehaviorSubject('');
   get filter() { return this._filterSubject.value }
