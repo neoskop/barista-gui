@@ -1,5 +1,5 @@
 {
-  "name": "barista-gui",
+  "name": "@neoskop/barista-gui",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
