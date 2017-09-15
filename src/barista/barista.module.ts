@@ -17,7 +17,9 @@ import { Dispatcher } from "../dispatcher/dispatcher";
 import { DispatcherModule } from "../dispatcher/dispatcher.module";
 import * as jwt from 'jwt-decode'
 import { Event, GuardsCheckEnd, Router } from '@angular/router';
-import { HierarchicalRoleBaseAccessControl, HrbacModule, RoleStore } from '@neoskop/hrbac';
+import { HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
+import { HrbacModule, RoleStore } from '@neoskop/hrbac/lib.es6/ng';
+
 
 @NgModule({
   declarations: [

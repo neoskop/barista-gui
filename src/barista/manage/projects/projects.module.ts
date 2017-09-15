@@ -25,8 +25,8 @@ import { UpdateComponent } from './update/update.component';
 import 'rxjs/add/operator/mergeMap';
 import { DispatcherModule } from "../../../dispatcher/dispatcher.module";
 import { ProjectsEffects } from "./projects.effects";
-import { HrbacModule } from "@neoskop/hrbac";
 import { EntityResourcePipe } from "../../pipes/entity-resource.pipe";
+import { HrbacModule } from "@neoskop/hrbac/lib.es6/ng";
 
 @NgModule({
   imports: [

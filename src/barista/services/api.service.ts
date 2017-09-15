@@ -24,8 +24,9 @@ import {
   UpdateSuiteAction
 } from "../manage/suites/suites.actions";
 import { Dispatcher } from "../../dispatcher/dispatcher";
-import { HierarchicalRoleBaseAccessControl, RoleStore } from "@neoskop/hrbac";
+import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
 import * as jwt from 'jwt-decode';
+import { RoleStore } from '@neoskop/hrbac/lib.es6/ng';
 
 
 @Injectable()
