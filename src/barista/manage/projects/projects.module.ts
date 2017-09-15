@@ -25,7 +25,7 @@ import { UpdateComponent } from './update/update.component';
 import 'rxjs/add/operator/mergeMap';
 import { DispatcherModule } from "../../../dispatcher/dispatcher.module";
 import { ProjectsEffects } from "./projects.effects";
-import { HrbacModule } from "../../../hrbac/ng/hrbac.module";
+import { HrbacModule } from "@neoskop/hrbac";
 import { EntityResourcePipe } from "../../pipes/entity-resource.pipe";
 
 @NgModule({
@@ -47,7 +47,7 @@ import { EntityResourcePipe } from "../../pipes/entity-resource.pipe";
     MdCardModule,
     MdDialogModule,
     DispatcherModule.forChild([ ProjectsEffects ]),
-    HrbacModule
+    HrbacModule.forChild()
   ],
   declarations: [RadioTabsDirective, EntityResourcePipe, RadioTabValueDirective, ListComponent, FormComponent, CreateComponent, UpdateComponent],
   entryComponents: [ CreateComponent, UpdateComponent ]

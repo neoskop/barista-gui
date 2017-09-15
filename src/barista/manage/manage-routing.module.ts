@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ManageComponent } from './manage/manage.component';
-import { HrbacGuard } from '../../hrbac/ng/hrbac.guard';
+import { HrbacGuard } from '@neoskop/hrbac';
 
 const routes : Routes = [
   {

@@ -1,4 +1,4 @@
-import { Resource } from '../../hrbac/types';
+import { Resource } from '@neoskop/hrbac';
 import { Pipe, PipeTransform } from '@angular/core';
 
 export class EntityResource extends Resource {

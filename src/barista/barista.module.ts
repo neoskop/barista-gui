@@ -15,14 +15,9 @@ import { ConfirmComponent } from "./components/confirm/confirm.component";
 import { ConfirmDialogAction } from './barista.actions';
 import { Dispatcher } from "../dispatcher/dispatcher";
 import { DispatcherModule } from "../dispatcher/dispatcher.module";
-import { HrbacModule } from '../hrbac/ng/hrbac.module';
-import { HierachicalRoleBaseAccessControl } from "../hrbac/hrbac";
 import * as jwt from 'jwt-decode'
-import { RoleStore } from "../hrbac/ng/role-store";
 import { Event, GuardsCheckEnd, Router } from '@angular/router';
-import { AssertionFunction } from '../hrbac/types';
-import { EntityResource } from "./pipes/entity-resource.pipe";
-
+import { HierarchicalRoleBaseAccessControl, HrbacModule, RoleStore } from '@neoskop/hrbac';
 
 @NgModule({
   declarations: [
@@ -39,7 +34,17 @@ import { EntityResource } from "./pipes/entity-resource.pipe";
     MdButtonModule,
     MdProgressBarModule,
     DispatcherModule.forRoot([]),
-    HrbacModule.forRoot()
+    HrbacModule.forRoot({
+      roles: {
+        "guest": [],
+        "_admin": []
+      },
+      permissions: [
+        [ 'guest' , [ [ 'login', [ { type: 'allow', privileges: [ 'display' ] } ] ] ] ],
+        [ '_admin' , [ [ null, [ { type: 'allow', privileges: null } ] ] ] ],
+        [ '_admin' , [ [ 'login', [ { type: 'deny', privileges: [ 'display' ] } ] ] ] ]
+      ]
+    })
   ],
   providers: [
     ApiService,
@@ -55,7 +60,7 @@ export class BaristaModule {
   constructor(protected api : ApiService,
               protected dispatcher : Dispatcher,
               protected dialog : MdDialog,
-              protected hrbac : HierachicalRoleBaseAccessControl,
+              protected hrbac : HierarchicalRoleBaseAccessControl,
               protected roleStore : RoleStore,
               protected router : Router) {
     this.dispatcher.for(ConfirmDialogAction).subscribe(action => {
@@ -79,14 +84,9 @@ export class BaristaModule {
     if(localStorage.getItem('Authorization')) {
       const token = jwt<{ aud: string, rol: string[] }>(localStorage.getItem('Authorization'));
       
-      this.hrbac.inherit(token.aud, ...token.rol);
+      this.hrbac.getRoleManager().setParents(token.aud, token.rol);
       this.roleStore.setRole(token.aud);
       
     }
-    
-    this.hrbac.allow('guest', 'login', 'display');
-  
-    this.hrbac.allow('_admin');
-    this.hrbac.deny('_admin', 'login', 'display');
   }
 }

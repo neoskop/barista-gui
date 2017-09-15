@@ -7,16 +7,25 @@ import { Router } from '@angular/router';
 import { SetupAdministratorAction, SetupCheckAction } from "../setup/setup.actions";
 import { AuthCheckAction, LoginAction, LogoutAction } from '../login/login.actions';
 import {
-  CreateProjectAction, UpdateProjectAction, RemoveProjectAction, ReadProjectAction, SearchProjectAction
+  CreateProjectAction,
+  ReadProjectAction,
+  RemoveProjectAction,
+  SearchProjectAction,
+  UpdateProjectAction
 } from "../manage/projects/projects.actions";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import { SearchSuiteAction, CreateSuiteAction, UpdateSuiteAction, RemoveSuiteAction, ReadSuiteAction } from "../manage/suites/suites.actions";
+import {
+  CreateSuiteAction,
+  ReadSuiteAction,
+  RemoveSuiteAction,
+  SearchSuiteAction,
+  UpdateSuiteAction
+} from "../manage/suites/suites.actions";
 import { Dispatcher } from "../../dispatcher/dispatcher";
-import { HierachicalRoleBaseAccessControl } from "../../hrbac/hrbac";
+import { HierarchicalRoleBaseAccessControl, RoleStore } from "@neoskop/hrbac";
 import * as jwt from 'jwt-decode';
-import { RoleStore } from "../../hrbac/ng/role-store";
 
 
 @Injectable()
@@ -26,7 +35,7 @@ export class ApiService {
   constructor(protected http : HttpClient,
               protected dispatcher : Dispatcher,
               protected router : Router,
-              protected hrbac : HierachicalRoleBaseAccessControl,
+              protected hrbac : HierarchicalRoleBaseAccessControl,
               protected roleStore : RoleStore) {
     
     dispatcher.for(SetupCheckAction).subscribe(a => this.setupCheck(a));
@@ -61,7 +70,7 @@ export class ApiService {
       localStorage.setItem('Authorization', result.token);
       const token = jwt<{ aud: string, rol: string[] }>(result.token);
   
-      this.hrbac.inherit(token.aud, ...token.rol);
+      this.hrbac.getRoleManager().setParents(token.aud, token.rol);
       this.roleStore.setRole(token.aud);
       this.clearCache('setupCheck');
       this.router.navigate([ '/' ]);
@@ -115,7 +124,7 @@ export class ApiService {
         localStorage.setItem('Authorization', result.result);
         const token = jwt<{ aud: string, rol: string[] }>(result.result);
   
-        this.hrbac.inherit(token.aud, ...token.rol);
+        this.hrbac.getRoleManager().setParents(token.aud, token.rol);
         this.roleStore.setRole(token.aud);
         this.router.navigate([ '/' ]);
         action.next();

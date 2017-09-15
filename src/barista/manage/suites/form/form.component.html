@@ -46,7 +46,7 @@
   </md-form-field>
 
   <md-chip-list #browsersList formArrayName="browsers">
-    <md-chip *ngFor="let control of browsersControls; let index = index" (remove)="remove('browser', index)">
+    <md-chip *ngFor="let control of browsersControls; let index = index" (remove)="remove('browsers', index)">
       <input type="hidden" [formControlName]="index" />
       {{control.value}}
       <md-icon mdChipRemove>cancel</md-icon>
