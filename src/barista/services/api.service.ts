@@ -27,6 +27,7 @@ import { Dispatcher } from "../../dispatcher/dispatcher";
 import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
 import * as jwt from 'jwt-decode';
 import { RoleStore } from '@neoskop/hrbac/lib.es6/ng';
+import { CookieService } from 'ngx-cookie';
 
 
 @Injectable()
@@ -37,7 +38,8 @@ export class ApiService {
               protected dispatcher : Dispatcher,
               protected router : Router,
               protected hrbac : HierarchicalRoleBaseAccessControl,
-              protected roleStore : RoleStore) {
+              protected roleStore : RoleStore,
+              protected cookies : CookieService) {
     
     dispatcher.for(SetupCheckAction).subscribe(a => this.setupCheck(a));
     dispatcher.for(AuthCheckAction).subscribe(a => this.authCheck(a));
@@ -68,7 +70,6 @@ export class ApiService {
     }).toPromise<{ success?: boolean, error?: string, token?: string }>();
   
     if(result.success) {
-      localStorage.setItem('Authorization', result.token);
       const token = jwt<{ aud: string, rol: string[] }>(result.token);
   
       this.hrbac.getRoleManager().setParents(token.aud, token.rol);
@@ -78,6 +79,7 @@ export class ApiService {
     }
   }
   
+  // @TODO: check for remove
   async setupCheck(action : SetupCheckAction) {
     let result : Promise<boolean>;
     if(this.cache.has('setupCheck')) {
@@ -99,8 +101,9 @@ export class ApiService {
     return action.next(true);
   }
   
+  // @TODO: check for remove
   async authCheck(action : AuthCheckAction) {
-    const hasToLogin = !localStorage.getItem('Authorization');
+    const hasToLogin = !this.cookies.get('jwt');
   
     if(action.isLogin && !hasToLogin) {
       this.router.navigate([ '/' ]);
@@ -122,7 +125,6 @@ export class ApiService {
       }).toPromise<{ success? : boolean, error? : string, result? : string }>();
     
       if(result.success) {
-        localStorage.setItem('Authorization', result.result);
         const token = jwt<{ aud: string, rol: string[] }>(result.result);
   
         this.hrbac.getRoleManager().setParents(token.aud, token.rol);
@@ -138,7 +140,7 @@ export class ApiService {
   }
   
   logout(action : LogoutAction) {
-    localStorage.removeItem('Authorization');
+    this.cookies.remove('jwt');
     this.roleStore.setRole('guest');
     this.router.navigate([ '/login' ]);
     action.next();

@@ -19,6 +19,7 @@ import * as jwt from 'jwt-decode'
 import { Event, GuardsCheckEnd, Router } from '@angular/router';
 import { HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
 import { HrbacModule, RoleStore } from '@neoskop/hrbac/lib.es6/ng';
+import { CookieModule, CookieService } from 'ngx-cookie';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { HrbacModule, RoleStore } from '@neoskop/hrbac/lib.es6/ng';
         [ '_admin' , [ [ null, [ { type: 'allow', privileges: null } ] ] ] ],
         [ '_admin' , [ [ 'login', [ { type: 'deny', privileges: [ 'display' ] } ] ] ] ]
       ]
-    })
+    }),
+    CookieModule.forRoot()
   ],
   providers: [
     ApiService,
@@ -64,7 +66,8 @@ export class BaristaModule {
               protected dialog : MdDialog,
               protected hrbac : HierarchicalRoleBaseAccessControl,
               protected roleStore : RoleStore,
-              protected router : Router) {
+              protected router : Router,
+              protected cookies : CookieService) {
     this.dispatcher.for(ConfirmDialogAction).subscribe(action => {
       if(undefined === action.config.position) {
         action.config.position = {
@@ -83,8 +86,8 @@ export class BaristaModule {
       }
     });
     
-    if(localStorage.getItem('Authorization')) {
-      const token = jwt<{ aud: string, rol: string[] }>(localStorage.getItem('Authorization'));
+    if(this.cookies.get('jwt')) {
+      const token = jwt<{ aud: string, rol: string[] }>(this.cookies.get('jwt'));
       
       this.hrbac.getRoleManager().setParents(token.aud, token.rol);
       this.roleStore.setRole(token.aud);
