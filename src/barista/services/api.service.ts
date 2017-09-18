@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { Router } from '@angular/router';
 import { SetupAdministratorAction, SetupCheckAction } from "../setup/setup.actions";
-import { AuthCheckAction, LoginAction, LogoutAction } from '../login/login.actions';
+import { LoginAction, LogoutAction } from '../login/login.actions';
 import {
   CreateProjectAction,
   ReadProjectAction,
@@ -42,7 +42,6 @@ export class ApiService {
               protected cookies : CookieService) {
     
     dispatcher.for(SetupCheckAction).subscribe(a => this.setupCheck(a));
-    dispatcher.for(AuthCheckAction).subscribe(a => this.authCheck(a));
   
     dispatcher.for(LoginAction).subscribe(a => this.login(a));
     dispatcher.for(LogoutAction).subscribe(a => this.logout(a));
@@ -79,13 +78,12 @@ export class ApiService {
     }
   }
   
-  // @TODO: check for remove
   async setupCheck(action : SetupCheckAction) {
     let result : Promise<boolean>;
     if(this.cache.has('setupCheck')) {
       result = this.cache.get('setupCheck');
     } else {
-      result = this.http.get('/_api/setup-check').map<{ message: string, result: boolean }, boolean>(res => res.result).toPromise();
+      result = this.http.get('/_api/setup-check').map<any, boolean>(res => res.result).toPromise();
     }
     const hasToSetup = !(await result);
   
@@ -99,22 +97,6 @@ export class ApiService {
     }
   
     return action.next(true);
-  }
-  
-  // @TODO: check for remove
-  async authCheck(action : AuthCheckAction) {
-    const hasToLogin = !this.cookies.get('jwt');
-  
-    if(action.isLogin && !hasToLogin) {
-      this.router.navigate([ '/' ]);
-      return action.next(false);
-    }
-    if(!action.isLogin && hasToLogin) {
-      this.router.navigate([ '/login' ]);
-      return action.next(false);
-    }
-  
-    action.next(true);
   }
   
   async login(action : LoginAction) {

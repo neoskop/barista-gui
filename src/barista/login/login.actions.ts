@@ -9,9 +9,3 @@ export class LoginAction extends Action<void> {
 export class LogoutAction extends Action<void> {
 
 }
-
-export class AuthCheckAction extends Action<boolean> {
-  constructor(public isLogin : boolean) {
-    super();
-  }
-}
