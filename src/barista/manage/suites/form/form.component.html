@@ -54,7 +54,7 @@
   </md-chip-list>
 
   <md-autocomplete #browserAuto="mdAutocomplete" (optionSelected)="add('browsers', browserInput, $event.option.value)">
-    <md-option *ngFor="let browser of filteredBrowsers | async" [value]="browser">{{ browser }}</md-option>
+    <md-option *ngFor="let browser of browsers | async" [value]="browser">{{ browser }}</md-option>
   </md-autocomplete>
 
   <h3>Options</h3>

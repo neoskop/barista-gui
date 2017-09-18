@@ -28,6 +28,7 @@ import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
 import * as jwt from 'jwt-decode';
 import { RoleStore } from '@neoskop/hrbac/lib.es6/ng';
 import { CookieService } from 'ngx-cookie';
+import { BrowserListAction } from '../testcafe.actions';
 
 
 @Injectable()
@@ -59,6 +60,8 @@ export class ApiService {
     dispatcher.for(UpdateSuiteAction).subscribe(a => this.updateSuite(a));
     dispatcher.for(RemoveSuiteAction).subscribe(a => this.removeSuite(a));
     dispatcher.for(ReadSuiteAction).subscribe(a => this.readSuite(a));
+    
+    dispatcher.for(BrowserListAction).subscribe(a => this.browserList(a));
   }
   
   async setupAdministrator(action : SetupAdministratorAction) {
@@ -238,6 +241,13 @@ export class ApiService {
     } catch(e) {
       action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
     }
+  }
+  
+  async browserList(action : BrowserListAction) {
+    this.http.get(`/_api/testcafe/browserlist`)
+      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .map<any, any>(result => result.result)
+      .subscribe(action);
   }
   
   readSuite(action : ReadSuiteAction) {
