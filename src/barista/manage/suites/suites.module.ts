@@ -16,7 +16,7 @@ import {
   MdSliderModule,
   MdSlideToggleModule,
   MdSortModule,
-  MdTableModule,
+  MdTableModule, MdTabsModule,
   MdToolbarModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +27,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import { DispatcherModule } from '../../../dispatcher/dispatcher.module';
 import { SuitesEffects } from './suites.effects';
+import { DetailsComponent } from './details/details.component';
 
 @NgModule({
   imports: [
@@ -46,11 +47,12 @@ import { SuitesEffects } from './suites.effects';
     MdSliderModule,
     MdSortModule,
     MdAutocompleteModule,
+    MdTabsModule,
     ReactiveFormsModule,
     FormsModule,
     DispatcherModule.forChild([ SuitesEffects ])
   ],
-  declarations: [ListComponent, FormComponent, CreateComponent, UpdateComponent],
+  declarations: [ListComponent, FormComponent, CreateComponent, UpdateComponent, DetailsComponent],
   entryComponents: [CreateComponent, UpdateComponent]
 })
 export class SuitesModule {}

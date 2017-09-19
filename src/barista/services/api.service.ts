@@ -19,9 +19,10 @@ import 'rxjs/add/observable/throw';
 import {
   CreateSuiteAction,
   ReadSuiteAction,
+  ReadTestResultsAction,
   RemoveSuiteAction,
   SearchSuiteAction,
-  UpdateSuiteAction
+  UpdateSuiteAction,
 } from "../manage/suites/suites.actions";
 import { Dispatcher } from "../../dispatcher/dispatcher";
 import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
@@ -62,6 +63,8 @@ export class ApiService {
     dispatcher.for(ReadSuiteAction).subscribe(a => this.readSuite(a));
     
     dispatcher.for(BrowserListAction).subscribe(a => this.browserList(a));
+    
+    dispatcher.for(ReadTestResultsAction).subscribe(a => this.readTestResults(a));
   }
   
   async setupAdministrator(action : SetupAdministratorAction) {
@@ -247,6 +250,26 @@ export class ApiService {
     this.http.get(`/_api/testcafe/browserlist`)
       .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
       .map<any, any>(result => result.result)
+      .subscribe(action);
+  }
+  
+  async readTestResults(action : ReadTestResultsAction) {
+    let params = new HttpParams();
+    
+    if(action.options.descending) {
+      params = params.set('descending', 'true')
+    }
+    
+    if(action.options.offset) {
+      params = params.set('offset', action.options.offset.toString());
+    }
+    
+    if(action.options.limit) {
+      params = params.set('limit', action.options.limit.toString());
+    }
+    
+    this.http.get(`/${action.projectId}/s/${action.suiteId}/results.json`, { params })
+      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
       .subscribe(action);
   }
   

@@ -1,0 +1,45 @@
+\:host
+  md-toolbar
+    [md-fab]
+      transform: translate(-16px, 50%)
+      z-index: 10
+
+  .mat-card
+    cursor: pointer
+
+  .mat-card-avatar
+    position: relative
+
+    &.error
+      background: #9f9f9f
+    &.failed
+      background: #e05d44
+    &.partial
+      background: #fe7d37
+    &.successful
+      background: #4c1
+    &.skipped
+      background: #dfb317
+    &.running
+      background: #dfb317
+    &.scheduled
+      background: #dfb317
+
+    .mat-icon
+      position: absolute
+      left: 50%
+      top: 50%
+      transform: translate(-50%, -50%)
+      color: white
+      font-weight: bold
+
+  /deep/
+    .mat-tab-label
+      > div
+        //flex-grow: 1
+        //position: relative
+        .mat-icon-button
+          position: absolute
+          right: 0
+          top: calc(50% - 20px)
+

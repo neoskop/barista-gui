@@ -60,3 +60,9 @@ export class ReadSuiteAction extends Action<any> {
     super();
   }
 }
+
+export class ReadTestResultsAction extends Action<{ total: number; rows: any[] }> {
+  constructor(public projectId : string, public suiteId : string, public options : { descending?: boolean, offset?: number, limit?: number }) {
+    super();
+  }
+}

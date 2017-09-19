@@ -1,0 +1,37 @@
+<md-toolbar color="secondary">
+  <span fxFlex="1 0 auto">{{ project?.name }} - {{ suite?.name }}</span>
+  <button md-fab (click)="openUpdateDialog()"><md-icon>mode_edit</md-icon></button>
+</md-toolbar>
+
+<md-tab-group [(selectedIndex)]="activeTabIndex">
+  <md-tab label="Test Results">
+    <md-card *ngFor="let result of results | async; let index = index" (click)="openDetails(index, result)">
+      <md-card-header>
+        <div mdCardAvatar [ngClass]="result.status">
+          <md-icon *ngIf="result.status == 'successful'">check</md-icon>
+          <md-icon *ngIf="result.status == 'error'">error</md-icon>
+          <md-icon *ngIf="result.status == 'failed'">clear</md-icon>
+          <md-icon *ngIf="result.status == 'partial'">clear</md-icon>
+          <md-icon *ngIf="result.status == 'skipped'">skip_next</md-icon>
+          <md-icon *ngIf="result.status == 'running'">directions_run</md-icon>
+          <md-icon *ngIf="result.status == 'scheduled'">alarm</md-icon>
+        </div>
+        <md-card-title>#{{ (length | async) - index - paginator.pageIndex * paginator.pageSize}}</md-card-title>
+        <md-card-subtitle>{{ result._id }}</md-card-subtitle>
+      </md-card-header>
+    </md-card>
+
+    <md-paginator [length]="length | async" [pageSize]="10" [pageSizeOptions]="[ 5, 10, 25, 100 ]"></md-paginator>
+  </md-tab>
+  <md-tab label="Configuration">
+    <pre>{{ suite | json }}</pre>
+  </md-tab>
+
+  <md-tab *ngFor="let detail of details; let index = index">
+    <div *mdTabLabel>
+      <button md-icon-button (click)="closeDetails(index);$event.stopImmediatePropagation()"><md-icon>clear</md-icon></button>
+      {{ detail.label }}
+      </div>
+    <pre>{{ detail.result | json }}</pre>
+  </md-tab>
+</md-tab-group>
