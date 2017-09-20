@@ -65,6 +65,7 @@
     <md-card>
       <md-card-content>
         <p>Status: {{ detail.result.status }}</p>
+        <pre *ngIf="detail.result.error">{{ detail.result.error }}</pre>
         <ng-container *ngFor="let fixture of detail.result.fixtures">
           <h3>{{ fixture.name }} <img src="/{{project._id | encodeUriComponent}}/s/{{suite.id | encodeUriComponent}}/f/{{fixture.name | encodeUriComponent}}/{{detail.result.id}}/batch.svg" [alt]="fixture.name"/></h3>
 
