@@ -16,6 +16,12 @@ import {
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import { Dispatcher } from "../../dispatcher/dispatcher";
+import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
+import * as jwt from 'jwt-decode';
+import { RoleStore } from '@neoskop/hrbac/lib.es6/ng';
+import { CookieService } from 'ngx-cookie';
+import { BrowserListAction } from '../testcafe.actions';
 import {
   CreateSuiteAction,
   ReadSuiteAction,
@@ -23,13 +29,8 @@ import {
   RemoveSuiteAction,
   SearchSuiteAction,
   UpdateSuiteAction,
+  RunTestAction,
 } from "../manage/suites/suites.actions";
-import { Dispatcher } from "../../dispatcher/dispatcher";
-import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
-import * as jwt from 'jwt-decode';
-import { RoleStore } from '@neoskop/hrbac/lib.es6/ng';
-import { CookieService } from 'ngx-cookie';
-import { BrowserListAction } from '../testcafe.actions';
 
 
 @Injectable()
@@ -65,6 +66,7 @@ export class ApiService {
     dispatcher.for(BrowserListAction).subscribe(a => this.browserList(a));
     
     dispatcher.for(ReadTestResultsAction).subscribe(a => this.readTestResults(a));
+    dispatcher.for(RunTestAction).subscribe(a => this.runTest(a));
   }
   
   async setupAdministrator(action : SetupAdministratorAction) {
@@ -269,6 +271,12 @@ export class ApiService {
     }
     
     this.http.get(`/${action.projectId}/s/${action.suiteId}/results.json`, { params })
+      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .subscribe(action);
+  }
+  
+  async runTest(action : RunTestAction) {
+    this.http.get(`/${action.projectId}/s/${action.suiteId}/run.json`)
       .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
       .subscribe(action);
   }

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } 
 import { Dispatcher } from '../../../../dispatcher/dispatcher';
 import { ReadProjectAction } from '../../projects/projects.actions';
 import { ActivatedRoute } from '@angular/router';
-import { ReadSuiteAction, ReadTestResultsAction, UpdateSuiteDialogAction } from '../suites.actions';
+import { ReadSuiteAction, ReadTestResultsAction, RunTestAction, UpdateSuiteDialogAction } from '../suites.actions';
 import { MdPaginator, MdTab } from '@angular/material';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
@@ -79,14 +79,23 @@ export class DetailsComponent implements OnInit, AfterViewInit {
     })
   }
   
+  runTest() {
+    this.dispatcher.dispatch(new RunTestAction(this.projectId, this.suiteId)).subscribe(result => {
+      this.openDetails(result);
+      this.loadTestresults();
+    })
+  }
+  
   openDetails(result : any) {
-    const label = result._id.substr(0, 6);
-    let f = this.details.find(d => d.label === label);
-    if(!f) {
-      this.details.push({ label, result })
+    const label = result.id.substr(0, 6);
+    let index = this.details.findIndex(d => d.label === label);
+    if(-1 === index) {
+      this.details.push({ label, result });
+      this.activeTabIndex = this.details.length + 1;
+    } else {
+      this.details[index].result = result;
+      this.activeTabIndex = 2 + index;
     }
-    
-    this.activeTabIndex = this.details.length + 1;
   }
   
   closeDetails(index : number) {

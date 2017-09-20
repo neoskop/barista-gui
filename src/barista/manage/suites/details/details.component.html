@@ -2,7 +2,7 @@
   <span fxFlex="1 0 auto">{{ project?.name }} - {{ suite?.name }}</span>
   <md-menu #menu="mdMenu">
     <button md-menu-item (click)="openUpdateDialog()"><md-icon>mode_edit</md-icon> Edit Suite</button>
-    <button md-menu-item><md-icon>directions_run</md-icon>Trigger test run</button>
+    <button md-menu-item (click)="runTest()"><md-icon>directions_run</md-icon>Trigger test run</button>
   </md-menu>
   <button md-icon-button [mdMenuTriggerFor]="menu"><md-icon>more_vert</md-icon></button>
 </md-toolbar>
@@ -20,8 +20,8 @@
           <md-icon *ngIf="result.status == 'running'">directions_run</md-icon>
           <md-icon *ngIf="result.status == 'scheduled'">alarm</md-icon>
         </div>
-        <md-card-title>{{ result.date | date:'medium' }}</md-card-title>
-        <md-card-subtitle>{{ result._id }}</md-card-subtitle>
+        <md-card-title>{{ result.scheduled | date:'medium' }}</md-card-title>
+        <md-card-subtitle>{{ result.id }}</md-card-subtitle>
       </md-card-header>
     </md-card>
 
@@ -65,19 +65,19 @@
     <md-card>
       <md-card-content>
         <p>Status: {{ detail.result.status }}</p>
-        <ng-container *ngFor="let fixture of detail.result.result?.fixtures">
-          <h3>{{ fixture.name }} <img src="/{{detail.result.project | encodeUriComponent}}/s/{{detail.result.suite | encodeUriComponent}}/f/{{fixture.name | encodeUriComponent}}/{{detail.result._id}}/batch.svg" [alt]="fixture.name"/></h3>
+        <ng-container *ngFor="let fixture of detail.result.fixtures">
+          <h3>{{ fixture.name }} <img src="/{{project._id | encodeUriComponent}}/s/{{suite.id | encodeUriComponent}}/f/{{fixture.name | encodeUriComponent}}/{{detail.result.id}}/batch.svg" [alt]="fixture.name"/></h3>
 
           <ng-container *ngFor="let test of fixture.tests">
             <md-expansion-panel>
               <md-expansion-panel-header>
                 <md-panel-title>{{ test.name }}</md-panel-title>
-                <md-panel-description><img src="/{{detail.result.project | encodeUriComponent}}/s/{{detail.result.suite | encodeUriComponent}}/f/{{fixture.name | encodeUriComponent}}/t/{{test.name | encodeUriComponent}}/{{detail.result._id}}/batch.svg" [alt]="test.name" /></md-panel-description>
+                <md-panel-description><img src="/{{project._id | encodeUriComponent}}/s/{{suite.id | encodeUriComponent}}/f/{{fixture.name | encodeUriComponent}}/t/{{test.name | encodeUriComponent}}/{{detail.result.id}}/batch.svg" [alt]="test.name" /></md-panel-description>
               </md-expansion-panel-header>
 
-              <p>Duration: {{ test.durationMs }}</p>
-              <barista-testcafe-error *ngFor="let error of test.errs" [error]="error"></barista-testcafe-error>
-              <!--<pre *ngFor="let error of test.errs">{{error}}</pre>-->
+              <ng-container *ngFor="let browser of detail.result.browsers">
+                <barista-testcafe-error *ngFor="let error of test.result[browser].errors" [error]="error"></barista-testcafe-error>
+              </ng-container>
             </md-expansion-panel>
           </ng-container>
         </ng-container>

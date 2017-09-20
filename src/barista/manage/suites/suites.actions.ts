@@ -66,3 +66,9 @@ export class ReadTestResultsAction extends Action<{ total: number; rows: any[] }
     super();
   }
 }
+
+export class RunTestAction extends Action<any> {
+  constructor(public projectId : string, public suiteId : string) {
+    super();
+  }
+}
