@@ -60,7 +60,6 @@ export class DetailsComponent implements OnInit, AfterViewInit {
   }
   
   loadTestresults() {
-    console.log(this.paginator.pageIndex, this.paginator.pageSize);
     this.results = this.dispatcher.dispatch(new ReadTestResultsAction(this.projectId, this.suiteId, {
       descending: true,
       offset: this.paginator.pageIndex * this.paginator.pageSize,
@@ -80,9 +79,8 @@ export class DetailsComponent implements OnInit, AfterViewInit {
     })
   }
   
-  openDetails(index : number, result : any) {
-    const number = this.length.value - index - this.paginator.pageSize * this.paginator.pageIndex;
-    const label = `#${number}`;
+  openDetails(result : any) {
+    const label = result._id.substr(0, 6);
     let f = this.details.find(d => d.label === label);
     if(!f) {
       this.details.push({ label, result })

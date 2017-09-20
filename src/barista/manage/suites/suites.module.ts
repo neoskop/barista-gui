@@ -4,21 +4,6 @@ import { CommonModule } from '@angular/common';
 import { SuitesRoutingModule } from './suites-routing.module';
 import { ListComponent } from './list/list.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  MdAutocompleteModule,
-  MdButtonModule,
-  MdCardModule,
-  MdChipsModule,
-  MdDialogModule,
-  MdIconModule,
-  MdInputModule,
-  MdPaginatorModule,
-  MdSliderModule,
-  MdSlideToggleModule,
-  MdSortModule,
-  MdTableModule, MdTabsModule,
-  MdToolbarModule
-} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormComponent } from './form/form.component';
 import { CreateComponent } from './create/create.component';
@@ -28,6 +13,25 @@ import 'rxjs/add/operator/map';
 import { DispatcherModule } from '../../../dispatcher/dispatcher.module';
 import { SuitesEffects } from './suites.effects';
 import { DetailsComponent } from './details/details.component';
+import {
+  MdAutocompleteModule,
+  MdButtonModule,
+  MdCardModule,
+  MdChipsModule,
+  MdDialogModule,
+  MdExpansionModule,
+  MdIconModule,
+  MdInputModule,
+  MdMenuModule,
+  MdPaginatorModule,
+  MdSliderModule,
+  MdSlideToggleModule,
+  MdSortModule,
+  MdTableModule,
+  MdTabsModule,
+  MdToolbarModule,
+} from '@angular/material';
+import { EncodeUriComponentPipe } from "../../pipes/encode-uri.pipe";
 
 @NgModule({
   imports: [
@@ -48,11 +52,13 @@ import { DetailsComponent } from './details/details.component';
     MdSortModule,
     MdAutocompleteModule,
     MdTabsModule,
+    MdExpansionModule,
+    MdMenuModule,
     ReactiveFormsModule,
     FormsModule,
     DispatcherModule.forChild([ SuitesEffects ])
   ],
-  declarations: [ListComponent, FormComponent, CreateComponent, UpdateComponent, DetailsComponent],
+  declarations: [ListComponent, FormComponent, CreateComponent, UpdateComponent, DetailsComponent, EncodeUriComponentPipe],
   entryComponents: [CreateComponent, UpdateComponent]
 })
 export class SuitesModule {}
