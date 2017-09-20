@@ -32,6 +32,7 @@ import {
   MdToolbarModule,
 } from '@angular/material';
 import { EncodeUriComponentPipe } from "../../pipes/encode-uri.pipe";
+import { TestcafeErrorModule } from "../../components/testcafe-error.module";
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { EncodeUriComponentPipe } from "../../pipes/encode-uri.pipe";
     MdMenuModule,
     ReactiveFormsModule,
     FormsModule,
-    DispatcherModule.forChild([ SuitesEffects ])
+    DispatcherModule.forChild([ SuitesEffects ]),
+    TestcafeErrorModule
   ],
   declarations: [ListComponent, FormComponent, CreateComponent, UpdateComponent, DetailsComponent, EncodeUriComponentPipe],
   entryComponents: [CreateComponent, UpdateComponent]

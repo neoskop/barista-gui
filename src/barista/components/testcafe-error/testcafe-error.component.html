@@ -1,0 +1,9 @@
+<pre *ngIf="error">{{ error.type }}: {{ error.message }}
+
+Browser: {{ error.browser }}
+
+<div class="code-wrapper"><ul><li *ngFor="let line of error.code.lines" [class.error]="line.error">{{line.number}}</li></ul><code class="hljs" [innerHtml]="error.code.html"></code></div>
+
+{{ error.stacktrace }}
+</pre>
+<pre *ngIf="errorAsText">{{errorAsText}}</pre>

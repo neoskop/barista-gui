@@ -76,7 +76,8 @@
               </md-expansion-panel-header>
 
               <p>Duration: {{ test.durationMs }}</p>
-              <pre *ngFor="let error of test.errs">{{error}}</pre>
+              <barista-testcafe-error *ngFor="let error of test.errs" [error]="error"></barista-testcafe-error>
+              <!--<pre *ngFor="let error of test.errs">{{error}}</pre>-->
             </md-expansion-panel>
           </ng-container>
         </ng-container>
