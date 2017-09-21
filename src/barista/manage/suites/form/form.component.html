@@ -75,4 +75,19 @@
     <label>Speed (<strong>{{form.value.options.speed}}</strong>)</label>
     <md-slider formControlName="speed" thumbLabel min="0.1" max="1" step="0.05" tickInterval="1"></md-slider>
   </div>
+
+  <h3>Env</h3>
+
+  <div formArrayName="env">
+    <div *ngFor="let control of envControls; let index = index" [formGroupName]="index" fxLayout="row">
+      <md-form-field>
+        <input mdInput type="text" placeholder="Key" formControlName="key" />
+      </md-form-field>
+      <md-form-field>
+        <input mdInput type="text" placeholder="Value" formControlName="value" />
+      </md-form-field>
+      <button md-mini-fab (click)="removeEnvEntry(index)"><md-icon>remove</md-icon></button>
+    </div>
+    <button md-fab (click)="addEnvEntry()"><md-icon>add</md-icon></button>
+  </div>
 </div>

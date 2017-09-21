@@ -33,7 +33,8 @@ export class FormComponent implements OnInit {
       selectorTimeout : new FormControl(10000, [ Validators.required ]),
       assertionTimeout: new FormControl(3000, [ Validators.required ]),
       speed           : new FormControl(1, [ Validators.required ]),
-    })
+    }),
+    env: new EnvFormArray([])
   });
   
   get globControls() {
@@ -42,6 +43,10 @@ export class FormComponent implements OnInit {
   
   get browsersControls() {
     return (this.form.get('browsers') as FormArray).controls;
+  }
+  
+  get envControls() {
+    return (this.form.get('env') as FormArray).controls;
   }
   
   globInput = new FormControl(null);
@@ -95,6 +100,14 @@ export class FormComponent implements OnInit {
     (this.form.get(path) as FormArray).removeAt(index);
   }
   
+  addEnvEntry() {
+    (this.form.get('env') as EnvFormArray).addEntry();
+  }
+  
+  removeEnvEntry(index : number) {
+    (this.form.get('env') as EnvFormArray).removeAt(index);
+  }
+  
 }
 
 class StringFormArray extends FormArray {
@@ -110,5 +123,26 @@ class StringFormArray extends FormArray {
       }
     }
     super.patchValue(value, options);
+  }
+}
+
+class EnvFormArray extends FormArray {
+  patchValue(values : any[], options? : { onlySelf? : boolean; emitEvent? : boolean }) : void {
+    while(this.length) {
+      this.removeAt(0);
+    }
+    if(values) {
+      for(const _row of values) {
+        this.addEntry();
+      }
+    }
+    super.patchValue(values, options);
+  }
+  
+  addEntry() {
+    this.push(new FormGroup({
+      key: new FormControl(null, [ Validators.required, Validators.pattern(/^[A-Z_]+$/) ]),
+      value: new FormControl(null, [ Validators.required, Validators.maxLength(256) ]),
+    }));
   }
 }
