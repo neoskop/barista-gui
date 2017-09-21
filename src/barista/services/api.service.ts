@@ -19,7 +19,7 @@ import 'rxjs/add/observable/throw';
 import { Dispatcher } from "../../dispatcher/dispatcher";
 import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
 import * as jwt from 'jwt-decode';
-import { RoleStore } from '@neoskop/hrbac/lib.es6/ng';
+import { RoleStore } from '@neoskop/hrbac/ng';
 import { CookieService } from 'ngx-cookie';
 import { BrowserListAction } from '../testcafe.actions';
 import {

@@ -177,9 +177,9 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@neoskop/hrbac@1.0.0-alpha.2":
-  version "1.0.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@neoskop/hrbac/-/hrbac-1.0.0-alpha.2.tgz#3e853ec6bcc70047c6da6f9cd3ebe0cb19cadd90"
+"@neoskop/hrbac@1.0.0-alpha.5":
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@neoskop/hrbac/-/hrbac-1.0.0-alpha.5.tgz#93657c4b98ce81951710409f809a7930fd3562a2"
 
 "@ngtools/json-schema@1.1.0", "@ngtools/json-schema@^1.1.0":
   version "1.1.0"
