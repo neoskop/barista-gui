@@ -9,7 +9,7 @@
 
 <md-tab-group [(selectedIndex)]="activeTabIndex">
   <md-tab label="Test Results">
-    <md-card *ngFor="let result of results | async; let index = index" (click)="openDetails(result)" class="linked">
+    <md-card *ngFor="let result of results; let index = index" (click)="openDetails(result)" class="linked">
       <md-card-header>
         <div mdCardAvatar [ngClass]="result.status">
           <md-icon *ngIf="result.status == 'successful'">check</md-icon>
@@ -25,7 +25,7 @@
       </md-card-header>
     </md-card>
 
-    <md-paginator [length]="length | async" [pageSize]="10" [pageSizeOptions]="[ 5, 10, 25, 100 ]"></md-paginator>
+    <md-paginator [length]="length" [pageSize]="10" [pageSizeOptions]="[ 5, 10, 25, 100 ]"></md-paginator>
   </md-tab>
   <md-tab label="Configuration">
     <md-card>
