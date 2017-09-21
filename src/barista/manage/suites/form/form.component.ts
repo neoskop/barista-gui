@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Dispatcher } from "../../../../dispatcher/dispatcher";
 import { BrowserListAction } from '../../../testcafe.actions';
+import 'rxjs/add/operator/mergeMap';
 
 @Component({
   selector   : 'barista-form',
