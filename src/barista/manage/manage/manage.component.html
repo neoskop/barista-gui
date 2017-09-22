@@ -14,11 +14,11 @@
 
   <md-sidenav #sidenav [mode]="isDesktop ? 'side' : 'over'" [opened]="isDesktop" fxLayout="column" class="mat-elevation-z2">
     <md-nav-list>
-      <a md-list-item [routerLink]="[ '/manage', 'projects' ]">
+      <a *neoAllowed="'projects';privilege:'list'" md-list-item [routerLink]="[ '/manage', 'projects' ]">
         <md-icon md-list-icon>dns</md-icon>
         Projects
       </a>
-      <a md-list-item [routerLink]="[ '/manage', 'users' ]">
+      <a *neoAllowed="'users';privilege:'list'" md-list-item [routerLink]="[ '/manage', 'users' ]">
         <md-icon md-list-icon>supervisor_account</md-icon>
         Users
       </a>

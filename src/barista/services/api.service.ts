@@ -88,8 +88,8 @@ export class ApiService {
     if(result.success) {
       const token = jwt<{ aud: string, rol: string[] }>(result.token);
   
-      this.hrbac.getRoleManager().setParents(token.aud, token.rol);
-      this.roleStore.setRole(token.aud);
+      this.hrbac.getRoleManager().setParents('user:' + token.aud, token.rol);
+      this.roleStore.setRole('user:' + token.aud);
       this.clearCache('setupCheck');
       this.router.navigate([ '/' ]);
     }
@@ -132,8 +132,8 @@ export class ApiService {
     }).map<{ success? : boolean, error? : string, result? : string }, void>((result) => {
       const token = jwt<{ aud: string, rol: string[] }>(result.result);
 
-      this.hrbac.getRoleManager().setParents(token.aud, token.rol);
-      this.roleStore.setRole(token.aud);
+      this.hrbac.getRoleManager().setParents('user:' + token.aud, token.rol);
+      this.roleStore.setRole('user:' + token.aud);
       this.router.navigate([ '/' ]);
     })
     .catch(this.handleError)

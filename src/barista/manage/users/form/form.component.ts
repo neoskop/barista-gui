@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
+import { RoleStore } from '@neoskop/hrbac/lib/ng';
 
 @Component({
   selector: 'barista-form',
@@ -61,7 +63,7 @@ export class FormComponent implements OnInit {
     return (this.form.get('roles') as FormArray).controls;
   }
   
-  constructor() { }
+  constructor(protected hrbac : HierarchicalRoleBaseAccessControl, protected roleStore : RoleStore) { }
   
   ngOnInit() : void {
     if(this.update) {
@@ -71,9 +73,10 @@ export class FormComponent implements OnInit {
       this.form.get('repeat').setValidators([]);
     }
     this.roleInput.valueChanges.subscribe(this.roleFilter);
-    this. roles = Observable.of(this._roles).mergeMap(roles => {
+    this.roles = Observable.of(this._roles).mergeMap(roles => {
       return this.roleFilter.map(value => ({ roles, value }));
     }).map(({ roles, value }) => {
+      roles = roles.filter(role => this.hrbac.isAllowed(this.roleStore.getRole(), 'role', role));
       roles.sort();
       if(!value) {
         return roles;

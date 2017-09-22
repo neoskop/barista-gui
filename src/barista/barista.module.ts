@@ -16,10 +16,11 @@ import { ConfirmDialogAction } from './barista.actions';
 import { Dispatcher } from "../dispatcher/dispatcher";
 import { DispatcherModule } from "../dispatcher/dispatcher.module";
 import { Event, GuardsCheckEnd, Router } from '@angular/router';
-import { HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
+import { Assertion, HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
 import { HrbacModule, RoleStore } from '@neoskop/hrbac/ng';
 import { CookieModule } from 'ngx-cookie';
 import { UserService } from './services/user.service';
+import { EntityResource } from './pipes/entity-resource.pipe';
 
 @NgModule({
   declarations: [
@@ -40,12 +41,7 @@ import { UserService } from './services/user.service';
       roles: {
         "guest": [],
         "_admin": []
-      },
-      permissions: [
-        [ 'guest' , [ [ 'login', [ { type: 'allow', privileges: [ 'display' ] } ] ] ] ],
-        [ '_admin' , [ [ null, [ { type: 'allow', privileges: null } ] ] ] ],
-        [ '_admin' , [ [ 'login', [ { type: 'deny', privileges: [ 'display' ] } ] ] ] ]
-      ]
+      }
     }),
     CookieModule.forRoot()
   ],
@@ -88,8 +84,43 @@ export class BaristaModule {
     
     const user = this.userService.getCurrentUser();
     if(user) {
-      this.hrbac.getRoleManager().setParents(user.id, user.roles);
-      this.roleStore.setRole(user.id);
+      this.hrbac.getRoleManager().setParents('user:' + user.id, user.roles);
+      this.roleStore.setRole('user:' + user.id);
     }
+    
+    this.initPermissions();
+  }
+  
+  initPermissions() {
+    const rm = this.hrbac.getRoleManager();
+    const pm = this.hrbac.getPermissionManager();
+    
+    rm.setParents('guest', []);
+    rm.setParents('user', [ 'guest' ]);
+    rm.setParents('manager', [ 'user' ]);
+    rm.setParents('admin', [ 'manager' ]);
+    rm.setParents('_admin', []);
+    
+    pm.allow('guest', 'login', 'display');
+    pm.deny('user', 'login', 'display');
+    
+    pm.allow('_admin');
+    pm.deny('_admin', 'login', 'display');
+    
+    pm.allow('user', 'profile');
+    
+    pm.allow('admin', 'projects');
+    pm.allow('admin', 'users', [ 'list', 'create' ]);
+    
+    pm.allow('admin', 'users', [ 'update', 'remove' ], new Assertion((hrbac : HierarchicalRoleBaseAccessControl, role: any, resource: EntityResource) => {
+      if(!(resource instanceof EntityResource)) {
+        return false;
+      }
+      return resource.entity.roles.every(r => hrbac.isAllowed(role, 'role', r));
+    }));
+    
+    pm.allow('admin', 'role');
+    pm.deny('admin', 'role', [ '_admin', 'admin' ]);
+    
   }
 }
