@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { ManageRoutingModule } from './manage-routing.module';
 import { ManageComponent } from './manage/manage.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MdListModule, MdSidenavModule, MdToolbarModule, MdIconModule, MdButtonModule } from '@angular/material';
+import { MdListModule, MdSidenavModule, MdToolbarModule, MdIconModule, MdButtonModule, MdMenuModule } from '@angular/material';
+import { GravatarModule } from '../../gravatar/gravatar.module';
+import { HrbacModule } from '@neoskop/hrbac/ng';
+import { ProfileModule } from './profile/profile.module';
 
 @NgModule({
   imports: [
@@ -15,7 +18,11 @@ import { MdListModule, MdSidenavModule, MdToolbarModule, MdIconModule, MdButtonM
     MdSidenavModule,
     MdListModule,
     MdIconModule,
-    MdButtonModule
+    MdButtonModule,
+    GravatarModule,
+    HrbacModule.forChild(),
+    MdMenuModule,
+    ProfileModule
   ],
   declarations: [ManageComponent]
 })

@@ -20,6 +20,7 @@ import { Event, GuardsCheckEnd, Router } from '@angular/router';
 import { HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
 import { HrbacModule, RoleStore } from '@neoskop/hrbac/ng';
 import { CookieModule, CookieService } from 'ngx-cookie';
+import { UserService } from './services/user.service';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { CookieModule, CookieService } from 'ngx-cookie';
   ],
   providers: [
     ApiService,
+    UserService,
     SetupCheckGuard,
     LoadingInterceptor,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
@@ -67,7 +69,7 @@ export class BaristaModule {
               protected hrbac : HierarchicalRoleBaseAccessControl,
               protected roleStore : RoleStore,
               protected router : Router,
-              protected cookies : CookieService) {
+              protected userService : UserService) {
     this.dispatcher.for(ConfirmDialogAction).subscribe(action => {
       if(undefined === action.config.position) {
         action.config.position = {
@@ -86,12 +88,10 @@ export class BaristaModule {
       }
     });
     
-    if(this.cookies.get('jwt')) {
-      const token = jwt<{ aud: string, rol: string[] }>(this.cookies.get('jwt'));
-      
-      this.hrbac.getRoleManager().setParents(token.aud, token.rol);
-      this.roleStore.setRole(token.aud);
-      
+    const user = this.userService.getCurrentUser();
+    if(user) {
+      this.hrbac.getRoleManager().setParents(user.id, user.roles);
+      this.roleStore.setRole(user.id);
     }
   }
 }

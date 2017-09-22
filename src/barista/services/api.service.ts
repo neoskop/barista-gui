@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import 'rxjs/add/operator/repeat';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -20,17 +20,18 @@ import { Dispatcher } from "../../dispatcher/dispatcher";
 import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
 import * as jwt from 'jwt-decode';
 import { RoleStore } from '@neoskop/hrbac/ng';
-import { CookieService } from 'ngx-cookie';
 import { BrowserListAction } from '../testcafe.actions';
 import {
   CreateSuiteAction,
   ReadSuiteAction,
   ReadTestResultsAction,
   RemoveSuiteAction,
+  RunTestAction,
   SearchSuiteAction,
   UpdateSuiteAction,
-  RunTestAction,
 } from "../manage/suites/suites.actions";
+import { UserService } from './user.service';
+import { UpdatePasswordAction } from '../manage/profile/profile.actions';
 
 
 @Injectable()
@@ -42,7 +43,7 @@ export class ApiService {
               protected router : Router,
               protected hrbac : HierarchicalRoleBaseAccessControl,
               protected roleStore : RoleStore,
-              protected cookies : CookieService) {
+              protected userService : UserService) {
     
     dispatcher.for(SetupCheckAction).subscribe(a => this.setupCheck(a));
   
@@ -67,6 +68,8 @@ export class ApiService {
     
     dispatcher.for(ReadTestResultsAction).subscribe(a => this.readTestResults(a));
     dispatcher.for(RunTestAction).subscribe(a => this.runTest(a));
+    
+    dispatcher.for(UpdatePasswordAction).subscribe(a => this.updatePassword(a));
   }
   
   async setupAdministrator(action : SetupAdministratorAction) {
@@ -107,36 +110,38 @@ export class ApiService {
     return action.next(true);
   }
   
-  async login(action : LoginAction) {
+  protected handleError(error : HttpErrorResponse) {
     try {
-      const result = await this.http.post('/_api/login', {
-        username: action.username,
-        password: action.password
-      }).toPromise<{ success? : boolean, error? : string, result? : string }>();
-    
-      if(result.success) {
-        const token = jwt<{ aud: string, rol: string[] }>(result.result);
-  
-        this.hrbac.getRoleManager().setParents(token.aud, token.rol);
-        this.roleStore.setRole(token.aud);
-        this.router.navigate([ '/' ]);
-        action.next();
-      } else {
-        action.error(result.error);
-      }
+      const json = JSON.parse(error.error);
+      return Observable.throw(json.error);
     } catch(e) {
-      action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
+      return Observable.throw('INTERNAL_SERVER_ERROR');
     }
   }
   
+  async login(action : LoginAction) {
+    this.http.post('/_api/login', {
+      username: action.username,
+      password: action.password
+    }).map<{ success? : boolean, error? : string, result? : string }, void>((result) => {
+      const token = jwt<{ aud: string, rol: string[] }>(result.result);
+
+      this.hrbac.getRoleManager().setParents(token.aud, token.rol);
+      this.roleStore.setRole(token.aud);
+      this.router.navigate([ '/' ]);
+    })
+    .catch(this.handleError)
+    .subscribe(action);
+  }
+  
   logout(action : LogoutAction) {
-    this.cookies.remove('jwt');
+    this.userService.removeCurrentUser();
     this.roleStore.setRole('guest');
     this.router.navigate([ '/login' ]);
     action.next();
   }
   
-  async searchProject(action : SearchProjectAction) {
+  searchProject(action : SearchProjectAction) {
     let params = new HttpParams();
     if(action.params.filter) {
       params = params.set('filter', action.params.filter);
@@ -154,45 +159,39 @@ export class ApiService {
       params = params.set('limit', action.params.limit.toString());
     }
     this.http.get('/_api/projects/', { params })
-      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .catch(this.handleError)
       .map<any, any>(result => result.result)
       .subscribe(action);
   }
   
-  async createProject(action : CreateProjectAction) {
-    try {
-      await this.http.post('/_api/projects', action.project).toPromise();
-      action.next(action.project);
-    } catch(e) {
-      action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
-    }
+  createProject(action : CreateProjectAction) {
+    this.http.post('/_api/projects', action.project)
+      .catch(this.handleError)
+      .map(() => action.project)
+      .subscribe(action);
   }
   
-  async updateProject(action : UpdateProjectAction) {
-    try {
-      await this.http.put(`/_api/projects/${action.project._id}`, action.project).toPromise();
-      action.next(action.project);
-    } catch(e) {
-      action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
-    }
+  updateProject(action : UpdateProjectAction) {
+    this.http.put(`/_api/projects/${action.project._id}`, action.project)
+      .catch(this.handleError)
+      .map(() => action.project)
+      .subscribe(action);
   }
   
-  async removeProject(action : RemoveProjectAction) {
-    try {
-      await this.http.delete(`/_api/projects/${action.project._id}`).toPromise();
-      action.next();
-    } catch(e) {
-      action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
-    }
+  removeProject(action : RemoveProjectAction) {
+    this.http.delete(`/_api/projects/${action.project._id}`)
+      .catch(this.handleError)
+      .map(() => {})
+      .subscribe(action);
   }
   
-  async readProject(action : ReadProjectAction) {
+  readProject(action : ReadProjectAction) {
     let params = new HttpParams();
     if(action.fetch) {
       params = params.set('fetch', action.fetch);
     }
     this.http.get('/_api/projects/' + action.projectId, { params })
-      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .catch(this.handleError)
       .map<any, any>(result => result.result)
       .subscribe(action);
   }
@@ -215,47 +214,41 @@ export class ApiService {
       params = params.set('limit', action.params.limit.toString());
     }
     this.http.get(`/_api/projects/${action.projectId}/suites`, { params })
-      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .catch(this.handleError)
       .map<any, any>(result => result.result)
       .subscribe(action);
   
   }
   
-  async createSuite(action : CreateSuiteAction) {
-    try {
-      await this.http.post(`/_api/projects/${action.projectId}/suites`, action.suite).toPromise();
-      action.next(action.suite);
-    } catch(e) {
-      action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
-    }
+  createSuite(action : CreateSuiteAction) {
+    this.http.post(`/_api/projects/${action.projectId}/suites`, action.suite)
+      .catch(this.handleError)
+      .map(() => action.suite)
+      .subscribe(action);
   }
   
-  async updateSuite(action : UpdateSuiteAction) {
-    try {
-      await this.http.put(`/_api/projects/${action.projectId}/suites/${action.suite.id}`, action.suite).toPromise();
-      action.next(action.suite);
-    } catch(e) {
-      action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
-    }
+  updateSuite(action : UpdateSuiteAction) {
+    this.http.put(`/_api/projects/${action.projectId}/suites/${action.suite.id}`, action.suite)
+      .catch(this.handleError)
+      .map(() => action.suite)
+      .subscribe(action);
   }
   
-  async removeSuite(action : RemoveSuiteAction) {
-    try {
-      await this.http.delete(`/_api/projects/${action.projectId}/suites/${action.suite.id}`).toPromise();
-      action.next();
-    } catch(e) {
-      action.error(e.error && e.error.error || 'INTERNAL_SERVER_ERROR');
-    }
+  removeSuite(action : RemoveSuiteAction) {
+    this.http.delete(`/_api/projects/${action.projectId}/suites/${action.suite.id}`)
+      .catch(this.handleError)
+      .map(() => {})
+      .subscribe(action);
   }
   
-  async browserList(action : BrowserListAction) {
+  browserList(action : BrowserListAction) {
     this.http.get(`/_api/testcafe/browserlist`)
-      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .catch(this.handleError)
       .map<any, any>(result => result.result)
       .subscribe(action);
   }
   
-  async readTestResults(action : ReadTestResultsAction) {
+  readTestResults(action : ReadTestResultsAction) {
     let params = new HttpParams();
     
     if(action.options.descending) {
@@ -271,19 +264,25 @@ export class ApiService {
     }
     
     this.http.get(`/${action.projectId}/s/${action.suiteId}/results.json`, { params })
-      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .catch(this.handleError)
       .subscribe(action);
   }
   
-  async runTest(action : RunTestAction) {
+  runTest(action : RunTestAction) {
     this.http.get(`/${action.projectId}/s/${action.suiteId}/run.json`)
-      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .catch(this.handleError)
+      .subscribe(action);
+  }
+  
+  updatePassword(action : UpdatePasswordAction) {
+    this.http.put(`/_api/profile/password`, { current: action.current, updated: action.updated })
+      .catch(this.handleError)
       .subscribe(action);
   }
   
   readSuite(action : ReadSuiteAction) {
     this.http.get(`/_api/projects/${action.projectId}/suites/${action.suiteId}`)
-      .catch(e => Observable.throw(e.error && e.error.error || 'INTERNAL_SERVER_ERROR'))
+      .catch(this.handleError)
       .map<any, any>(result => result.result)
       .subscribe(action);
   }

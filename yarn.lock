@@ -212,6 +212,10 @@
   dependencies:
     "@types/jasmine" "*"
 
+"@types/js-md5@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@types/js-md5/-/js-md5-0.4.1.tgz#a2ec2a952fa049ec9c3286e3710d45f31c95e433"
+
 "@types/jwt-decode@2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@types/jwt-decode/-/jwt-decode-2.2.1.tgz#afdf5c527fcfccbd4009b5fd02d1e18241f2d2f2"
@@ -2801,6 +2805,10 @@ jasminewd2@^2.1.0:
 js-base64@^2.1.5, js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.1.9.tgz#f0e80ae039a4bd654b5f281fc93f04a914a7fcce"
+
+js-md5@0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/js-md5/-/js-md5-0.6.0.tgz#d9a083b268b63f56f3d709b841a667136e2bfb06"
 
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"

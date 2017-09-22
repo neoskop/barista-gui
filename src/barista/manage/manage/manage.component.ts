@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LogoutAction } from "../../login/login.actions";
 import { Dispatcher } from '../../../dispatcher/dispatcher';
+import { UserService, IUser } from '../../services/user.service';
+import { UpdatePasswordDialogAction } from '../profile/profile.actions';
 
 @Component({
   selector: 'barista-manage',
@@ -13,7 +15,11 @@ export class ManageComponent implements OnInit {
     return document.documentElement.clientWidth >= 960;
   }
   
-  constructor(protected dispatcher : Dispatcher) { }
+  get user() : IUser|null {
+    return this.userService.getCurrentUser();
+  }
+  
+  constructor(protected dispatcher : Dispatcher, public userService : UserService) { }
 
   ngOnInit() {
   }
@@ -22,4 +28,7 @@ export class ManageComponent implements OnInit {
     this.dispatcher.dispatch(new LogoutAction());
   }
 
+  updatePassword() {
+    this.dispatcher.dispatch(new UpdatePasswordDialogAction());
+  }
 }
