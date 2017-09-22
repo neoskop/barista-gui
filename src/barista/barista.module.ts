@@ -15,13 +15,11 @@ import { ConfirmComponent } from "./components/confirm/confirm.component";
 import { ConfirmDialogAction } from './barista.actions';
 import { Dispatcher } from "../dispatcher/dispatcher";
 import { DispatcherModule } from "../dispatcher/dispatcher.module";
-import * as jwt from 'jwt-decode'
 import { Event, GuardsCheckEnd, Router } from '@angular/router';
 import { HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
 import { HrbacModule, RoleStore } from '@neoskop/hrbac/ng';
-import { CookieModule, CookieService } from 'ngx-cookie';
+import { CookieModule } from 'ngx-cookie';
 import { UserService } from './services/user.service';
-
 
 @NgModule({
   declarations: [

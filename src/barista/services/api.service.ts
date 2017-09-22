@@ -32,7 +32,7 @@ import {
 } from "../manage/suites/suites.actions";
 import { UserService } from './user.service';
 import { UpdatePasswordAction } from '../manage/profile/profile.actions';
-
+import { SearchUserAction, CreateUserAction, UpdateUserAction, RemoveUserAction, ReadUserAction } from '../manage/users/users.actions';
 
 @Injectable()
 export class ApiService {
@@ -57,6 +57,12 @@ export class ApiService {
     dispatcher.for(UpdateProjectAction).subscribe(a => this.updateProject(a));
     dispatcher.for(RemoveProjectAction).subscribe(a => this.removeProject(a));
     dispatcher.for(ReadProjectAction).subscribe(a => this.readProject(a));
+    
+    dispatcher.for(SearchUserAction).subscribe(a => this.searchUser(a));
+    dispatcher.for(CreateUserAction).subscribe(a => this.createUser(a));
+    dispatcher.for(UpdateUserAction).subscribe(a => this.updateUser(a));
+    dispatcher.for(RemoveUserAction).subscribe(a => this.removeUser(a));
+    dispatcher.for(ReadUserAction).subscribe(a => this.readUser(a));
     
     dispatcher.for(SearchSuiteAction).subscribe(a => this.searchSuite(a));
     dispatcher.for(CreateSuiteAction).subscribe(a => this.createSuite(a));
@@ -191,6 +197,61 @@ export class ApiService {
       params = params.set('fetch', action.fetch);
     }
     this.http.get('/_api/projects/' + action.projectId, { params })
+      .catch(this.handleError)
+      .map<any, any>(result => result.result)
+      .subscribe(action);
+  }
+  
+  searchUser(action : SearchUserAction) {
+    let params = new HttpParams();
+    if(action.params.filter) {
+      params = params.set('filter', action.params.filter);
+    }
+    if(action.params.sort) {
+      params = params.set('sort', action.params.sort);
+    }
+    if(action.params.order) {
+      params = params.set('order', action.params.order);
+    }
+    if(action.params.offset) {
+      params = params.set('offset', action.params.offset.toString());
+    }
+    if(action.params.limit) {
+      params = params.set('limit', action.params.limit.toString());
+    }
+    this.http.get('/_api/users/', { params })
+      .catch(this.handleError)
+      .map<any, any>(result => result.result)
+      .subscribe(action);
+  }
+  
+  createUser(action : CreateUserAction) {
+    this.http.post('/_api/users', action.user)
+      .catch(this.handleError)
+      .map(() => action.user)
+      .subscribe(action);
+  }
+  
+  updateUser(action : UpdateUserAction) {
+    this.http.put(`/_api/users/${action.user._id}`, action.user)
+      .catch(this.handleError)
+      .map(() => action.user)
+      .subscribe(action);
+  }
+  
+  removeUser(action : RemoveUserAction) {
+    this.http.delete(`/_api/users/${action.user._id}`)
+      .catch(this.handleError)
+      .map(() => {})
+      .subscribe(action);
+  }
+  
+  readUser(action : ReadUserAction) {
+    let params = new HttpParams();
+    if(action.fetch) {
+      params = params.set('fetch', action.fetch);
+    }
+    this.http.get('/_api/users/' + action.userId, { params })
       .catch(this.handleError)
       .map<any, any>(result => result.result)
       .subscribe(action);

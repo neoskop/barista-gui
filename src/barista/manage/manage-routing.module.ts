@@ -15,6 +15,12 @@ const routes : Routes = [
         data: { resourceId: 'projects', privilege: 'list' }
       },
       {
+        path: 'users',
+        loadChildren: './users/users.module#UsersModule',
+        canActivate: [ HrbacGuard ],
+        data: { resourceId: 'users', privilege: 'list' }
+      },
+      {
         path: '**',
         redirectTo: 'projects'
       }

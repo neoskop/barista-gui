@@ -1,0 +1,61 @@
+<div [formGroup]="form" class="mat-typography">
+  <md-form-field>
+    <input mdInput type="text" placeholder="Username" formControlName="_id" [readonly]="update ? true : null" />
+    <md-hint *ngIf="update" align="end">Can not be changed.</md-hint>
+
+    <md-error *ngIf="form.get('_id').invalid">
+      <span *ngIf="form.get('_id').hasError('required')">Identifier is <strong>required</strong></span>
+      <span *ngIf="form.get('_id').hasError('minlength')">Identifier is <strong>to short</strong></span>
+      <span *ngIf="form.get('_id').hasError('maxlength')">Identifier is <strong>to long</strong></span>
+      <span *ngIf="form.get('_id').hasError('pattern')">Identifier has <strong>invalid characters</strong> (a-z0-9-_.)</span>
+    </md-error>
+  </md-form-field>
+
+  <md-form-field>
+    <input mdInput type="email" placeholder="E-Mail" formControlName="email" />
+
+    <md-error *ngIf="form.get('email').invalid">
+      <span *ngIf="form.get('email').hasError('required')">E-Mail is <strong>required</strong></span>
+      <span *ngIf="form.get('email').hasError('email')">E-Mail is <strong>invalid</strong></span>
+    </md-error>
+  </md-form-field>
+
+  <md-form-field>
+    <input mdInput type="password" placeholder="Password" formControlName="password" />
+
+    <md-error *ngIf="form.get('password').invalid">
+      <span *ngIf="form.get('password').hasError('required')">Password is <strong>required</strong></span>
+    </md-error>
+  </md-form-field>
+
+  <md-form-field>
+    <input mdInput type="password" placeholder="Repeat Password" formControlName="repeat" />
+
+    <md-error *ngIf="form.get('repeat').invalid">
+      <span *ngIf="form.get('repeat').hasError('required')">Repeat Password is <strong>required</strong></span>
+      <span *ngIf="form.get('repeat').hasError('repeat')">Repeat Password is <strong>incorrect</strong></span>
+    </md-error>
+  </md-form-field>
+
+  <md-form-field>
+    <input mdInput
+           [formControl]="roleInput"
+           type="text"
+           placeholder="Role"
+           [mdAutocomplete]="roleAuto"
+           [mdChipInputFor]="rolesList"
+           (keydown.enter)="addRoleConditional(roleInput.value);$event.stopPropagation()" />
+  </md-form-field>
+
+  <md-chip-list #rolesList formArrayName="roles">
+    <md-chip *ngFor="let control of roleControls; let index = index" (remove)="removeRole(index)">
+      <input type="hidden" [formControlName]="index" />
+      {{control.value}}
+      <md-icon mdChipRemove>cancel</md-icon>
+    </md-chip>
+  </md-chip-list>
+
+  <md-autocomplete #roleAuto="mdAutocomplete" (optionSelected)="addRole($event.option.value)">
+    <md-option *ngFor="let role of roles | async" [value]="role">{{ role }}</md-option>
+  </md-autocomplete>
+</div>
