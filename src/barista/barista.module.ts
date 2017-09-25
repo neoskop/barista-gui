@@ -16,7 +16,7 @@ import { ConfirmDialogAction } from './barista.actions';
 import { Dispatcher } from "../dispatcher/dispatcher";
 import { DispatcherModule } from "../dispatcher/dispatcher.module";
 import { Event, GuardsCheckEnd, Router } from '@angular/router';
-import { Assertion, HierarchicalRoleBaseAccessControl } from '@neoskop/hrbac';
+import { Assertion, AsyncHRBAC, RoleManager, PermissionManager, AsyncAssertion } from '@neoskop/hrbac';
 import { HrbacModule, RoleStore } from '@neoskop/hrbac/ng';
 import { CookieModule } from 'ngx-cookie';
 import { UserService } from './services/user.service';
@@ -37,12 +37,7 @@ import { EntityResource } from './pipes/entity-resource.pipe';
     MdButtonModule,
     MdProgressBarModule,
     DispatcherModule.forRoot([]),
-    HrbacModule.forRoot({
-      roles: {
-        "guest": [],
-        "_admin": []
-      }
-    }),
+    HrbacModule.forRootAsync(),
     CookieModule.forRoot()
   ],
   providers: [
@@ -60,7 +55,7 @@ export class BaristaModule {
   constructor(protected api : ApiService,
               protected dispatcher : Dispatcher,
               protected dialog : MdDialog,
-              protected hrbac : HierarchicalRoleBaseAccessControl,
+              protected hrbac : AsyncHRBAC,
               protected roleStore : RoleStore,
               protected router : Router,
               protected userService : UserService) {
@@ -84,7 +79,7 @@ export class BaristaModule {
     
     const user = this.userService.getCurrentUser();
     if(user) {
-      this.hrbac.getRoleManager().setParents('user:' + user.id, user.roles);
+      (this.hrbac.getRoleManager() as any).setParents('user:' + user.id, user.roles);
       this.roleStore.setRole('user:' + user.id);
     }
     
@@ -92,8 +87,8 @@ export class BaristaModule {
   }
   
   initPermissions() {
-    const rm = this.hrbac.getRoleManager();
-    const pm = this.hrbac.getPermissionManager();
+    const rm : RoleManager = this.hrbac.getRoleManager() as any;
+    const pm : PermissionManager = this.hrbac.getPermissionManager() as any;
     
     rm.setParents('guest', []);
     rm.setParents('user', [ 'guest' ]);
@@ -112,12 +107,19 @@ export class BaristaModule {
     pm.allow('admin', 'projects');
     pm.allow('admin', 'users', [ 'list', 'create' ]);
     
-    pm.allow('admin', 'users', [ 'update', 'remove' ], new Assertion((hrbac : HierarchicalRoleBaseAccessControl, role: any, resource: EntityResource) => {
+    pm.allow('admin', 'users', [ 'update', 'remove' ], new AsyncAssertion(async (hrbac : AsyncHRBAC, role: any, resource: EntityResource) => {
       if(!(resource instanceof EntityResource)) {
         return false;
       }
-      return resource.entity.roles.every(r => hrbac.isAllowed(role, 'role', r));
-    }));
+      
+      for(const r of resource.entity.roles) {
+        if(!await hrbac.isAllowed(role, 'role', r)) {
+          return false;
+        }
+      }
+      return true;
+      // return resource.entity.roles.every(r => hrbac.isAllowed(role, 'role', r));
+    }) as any);
     
     pm.allow('admin', 'role');
     pm.deny('admin', 'role', [ '_admin', 'admin' ]);

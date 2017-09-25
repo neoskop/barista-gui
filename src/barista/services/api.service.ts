@@ -17,7 +17,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Dispatcher } from "../../dispatcher/dispatcher";
-import { HierarchicalRoleBaseAccessControl } from "@neoskop/hrbac";
+import { AsyncHRBAC } from "@neoskop/hrbac";
 import * as jwt from 'jwt-decode';
 import { RoleStore } from '@neoskop/hrbac/ng';
 import { BrowserListAction } from '../testcafe.actions';
@@ -41,7 +41,7 @@ export class ApiService {
   constructor(protected http : HttpClient,
               protected dispatcher : Dispatcher,
               protected router : Router,
-              protected hrbac : HierarchicalRoleBaseAccessControl,
+              protected hrbac : AsyncHRBAC,
               protected roleStore : RoleStore,
               protected userService : UserService) {
     
@@ -88,7 +88,7 @@ export class ApiService {
     if(result.success) {
       const token = jwt<{ aud: string, rol: string[] }>(result.token);
   
-      this.hrbac.getRoleManager().setParents('user:' + token.aud, token.rol);
+      (this.hrbac.getRoleManager() as any).setParents('user:' + token.aud, token.rol);
       this.roleStore.setRole('user:' + token.aud);
       this.clearCache('setupCheck');
       this.router.navigate([ '/' ]);
@@ -132,7 +132,7 @@ export class ApiService {
     }).map<{ success? : boolean, error? : string, result? : string }, void>((result) => {
       const token = jwt<{ aud: string, rol: string[] }>(result.result);
 
-      this.hrbac.getRoleManager().setParents('user:' + token.aud, token.rol);
+      (this.hrbac.getRoleManager() as any).setParents('user:' + token.aud, token.rol);
       this.roleStore.setRole('user:' + token.aud);
       this.router.navigate([ '/' ]);
     })
